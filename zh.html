@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dam — Screen sharing, without the exposure.</title>
-  <meta name="description" content="Dam automatically hides your sensitive apps the moment your screen is shared. Built for professionals who value privacy." />
+  <title>Dam — 共享屏幕，不泄露隐私。</title>
+  <meta name="description" content="Dam 自动在屏幕共享的那一刻隐藏你的敏感应用。专为注重隐私的专业人士打造。" />
   <link rel="icon" type="image/png" href="icon.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,7 +25,7 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       color: var(--black);
       background: var(--white);
       line-height: 1.6;
@@ -60,6 +60,17 @@
     }
     .nav-logo img { width: 28px; height: 28px; border-radius: 7px; }
     .nav-logo span { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .lang-switch {
+      font-size: 13px;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .lang-switch:hover { border-color: var(--green); color: var(--green); }
     .nav-cta {
       background: var(--green);
       color: var(--white);
@@ -88,13 +99,12 @@
       padding: 5px 14px;
       border-radius: 100px;
       margin-bottom: 28px;
-      letter-spacing: 0.2px;
     }
     .hero h1 {
-      font-size: clamp(36px, 6vw, 60px);
+      font-size: clamp(34px, 6vw, 58px);
       font-weight: 800;
-      letter-spacing: -1.5px;
-      line-height: 1.1;
+      letter-spacing: -1px;
+      line-height: 1.15;
       color: var(--black);
       margin-bottom: 22px;
     }
@@ -103,11 +113,11 @@
       color: var(--green);
     }
     .hero p {
-      font-size: clamp(16px, 2.2vw, 20px);
+      font-size: clamp(16px, 2.2vw, 19px);
       color: var(--gray);
-      max-width: 560px;
+      max-width: 520px;
       margin: 0 auto 40px;
-      line-height: 1.65;
+      line-height: 1.7;
     }
     .hero-actions {
       display: flex;
@@ -160,9 +170,7 @@
     .dot-r { background: #ff5f57; }
     .dot-y { background: #febc2e; }
     .dot-g { background: #28c840; }
-    .mockup-body {
-      padding: 32px 28px;
-    }
+    .mockup-body { padding: 32px 28px; }
     .mockup-title {
       font-size: 13px;
       font-weight: 600;
@@ -187,10 +195,8 @@
     }
     .app-name { font-size: 14px; font-weight: 500; color: var(--black); }
     .tag {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 6px;
+      font-size: 12px; font-weight: 600;
+      padding: 3px 10px; border-radius: 6px;
     }
     .tag-quit { background: #ffeaea; color: #d63031; }
     .tag-min  { background: #fff3e0; color: #e17c00; }
@@ -207,9 +213,9 @@
       margin-bottom: 12px;
     }
     .section-title {
-      font-size: clamp(26px, 4vw, 40px);
+      font-size: clamp(26px, 4vw, 38px);
       font-weight: 800;
-      letter-spacing: -0.8px;
+      letter-spacing: -0.5px;
       color: var(--black);
       line-height: 1.2;
       margin-bottom: 16px;
@@ -218,7 +224,7 @@
       font-size: 17px;
       color: var(--gray);
       max-width: 520px;
-      line-height: 1.65;
+      line-height: 1.7;
     }
 
     /* ── PROBLEM ── */
@@ -236,8 +242,8 @@
       padding: 28px 24px;
     }
     .problem-icon { font-size: 28px; margin-bottom: 14px; }
-    .problem-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--black); }
-    .problem-card p  { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .problem-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .problem-card p  { font-size: 14px; color: var(--gray); line-height: 1.65; }
 
     /* ── FEATURES ── */
     .features-grid {
@@ -265,7 +271,7 @@
       margin-bottom: 18px;
     }
     .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-    .feature-card p  { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .feature-card p  { font-size: 14px; color: var(--gray); line-height: 1.65; }
 
     /* ── HOW IT WORKS ── */
     .how { background: var(--gray-light); }
@@ -274,45 +280,31 @@
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 0;
       margin-top: 56px;
-      position: relative;
     }
-    .step {
-      padding: 28px 24px;
-      text-align: center;
-      position: relative;
-    }
+    .step { padding: 28px 24px; text-align: center; }
     .step-num {
       width: 42px; height: 42px;
       background: var(--green);
       color: var(--white);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 16px; font-weight: 700;
       margin: 0 auto 16px;
     }
     .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-    .step p  { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .step p  { font-size: 14px; color: var(--gray); line-height: 1.65; }
 
     /* ── DOWNLOAD CTA ── */
-    .download {
-      text-align: center;
-      padding: 100px 24px;
-    }
+    .download { text-align: center; padding: 100px 24px; }
     .download .section-title { margin-bottom: 12px; }
     .download .section-sub   { margin: 0 auto 40px; }
-    .download-meta {
-      font-size: 14px;
-      color: #aaa;
-      margin-top: 16px;
-    }
+    .download-meta { font-size: 14px; color: #aaa; margin-top: 16px; }
     .download-meta span { margin: 0 8px; }
 
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid #ececec;
       padding: 32px 24px;
-      text-align: center;
     }
     .footer-inner {
       max-width: var(--max-w);
@@ -343,28 +335,28 @@
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="#">
-      <img src="icon.png" alt="Dam icon" />
+      <img src="icon.png" alt="Dam 图标" />
       <span>Dam</span>
     </a>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <a href="zh.html" style="font-size:13px;color:#666;text-decoration:none;padding:5px 10px;border:1px solid #ddd;border-radius:6px;">中文</a>
-      <a class="nav-cta" href="#download">Download</a>
+    <div class="nav-right">
+      <a class="lang-switch" href="index.html">English</a>
+      <a class="nav-cta" href="#download">下载</a>
     </div>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">macOS Menu Bar App</div>
-  <h1>Screen sharing,<br/>without the <em>exposure.</em></h1>
-  <p>Dam watches for screen sharing. The moment it's detected, your sensitive apps disappear — automatically, silently, instantly.</p>
+  <div class="hero-badge">macOS 菜单栏应用</div>
+  <h1>共享屏幕，<br/>不泄露<em>一丝隐私。</em></h1>
+  <p>Dam 实时监测屏幕共享状态。一旦检测到共享，你的敏感应用会自动消失——无声、即时、彻底。</p>
   <div class="hero-actions">
     <a class="btn-primary" href="https://github.com/zizaimini/dam-app/releases/download/v1.0.0/Dam.dmg">
       <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M10 2v11M6 9l4 4 4-4M3 17h14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Download for Mac
+      下载 Mac 版
     </a>
   </div>
-  <p class="hero-note">Free · macOS 13+ · Apple Silicon &amp; Intel</p>
+  <p class="hero-note">免费 · macOS 13 或更高版本 · Apple Silicon 和 Intel 均支持</p>
 
   <!-- Mockup -->
   <div class="mockup-wrap">
@@ -375,34 +367,34 @@
         <div class="dot dot-g"></div>
       </div>
       <div class="mockup-body">
-        <div class="mockup-title">Protected Apps</div>
+        <div class="mockup-title">受保护的应用</div>
         <div class="app-row">
           <div class="app-info">
             <div class="app-dot" style="background:#fff3e0">💼</div>
             <span class="app-name">1Password</span>
           </div>
-          <span class="tag tag-quit">Quit</span>
+          <span class="tag tag-quit">退出</span>
         </div>
         <div class="app-row">
           <div class="app-info">
             <div class="app-dot" style="background:#e8f4fd">💬</div>
-            <span class="app-name">Messages</span>
+            <span class="app-name">微信</span>
           </div>
-          <span class="tag tag-min">Minimize</span>
+          <span class="tag tag-min">最小化</span>
         </div>
         <div class="app-row">
           <div class="app-info">
             <div class="app-dot" style="background:#fce8f3">🏦</div>
-            <span class="app-name">MoneyMoney</span>
+            <span class="app-name">网上银行</span>
           </div>
-          <span class="tag tag-quit">Quit</span>
+          <span class="tag tag-quit">退出</span>
         </div>
         <div class="app-row">
           <div class="app-info">
             <div class="app-dot" style="background:#e8f7ef">📝</div>
             <span class="app-name">Obsidian</span>
           </div>
-          <span class="tag tag-min">Minimize</span>
+          <span class="tag tag-min">最小化</span>
         </div>
       </div>
     </div>
@@ -412,24 +404,24 @@
 <!-- PROBLEM -->
 <section class="problem">
   <div class="section-inner">
-    <div class="section-label">The Problem</div>
-    <h2 class="section-title">Every screen share is a risk.</h2>
-    <p class="section-sub">Your password manager, banking app, private messages — they're all one accidental share away from being seen.</p>
+    <div class="section-label">问题所在</div>
+    <h2 class="section-title">每一次共享屏幕，都是一次风险。</h2>
+    <p class="section-sub">你的密码管理器、银行 App、私人消息——它们离"被人看见"只差一次误操作。</p>
     <div class="problem-grid">
       <div class="problem-card">
         <div class="problem-icon">😰</div>
-        <h3>Meeting slips</h3>
-        <p>You hit "Share Screen" and realize your inbox, notes, or financials are visible. You scramble to close tabs.</p>
+        <h3>会议失误</h3>
+        <p>点击"共享屏幕"的一瞬间才意识到——收件箱、笔记、财务数据都暴露在镜头前，慌乱关窗口已经来不及。</p>
       </div>
       <div class="problem-card">
         <div class="problem-icon">📺</div>
-        <h3>AirPlay surprises</h3>
-        <p>You mirror to a conference room TV. Everyone suddenly sees your desktop notifications and open apps.</p>
+        <h3>AirPlay 意外</h3>
+        <p>投屏到会议室电视，所有人突然看到了你的桌面通知和打开的应用。</p>
       </div>
       <div class="problem-card">
         <div class="problem-icon">🙈</div>
-        <h3>Mental overhead</h3>
-        <p>Before every share, you manually close a dozen windows. It's tedious, and you still miss things.</p>
+        <h3>每次共享前的心理负担</h3>
+        <p>每次共享前都要手动关掉十几个窗口。麻烦，而且总有漏掉的。</p>
       </div>
     </div>
   </div>
@@ -438,39 +430,39 @@
 <!-- FEATURES -->
 <section class="features">
   <div class="section-inner">
-    <div class="section-label">Features</div>
-    <h2 class="section-title">Set it once. Forget it forever.</h2>
-    <p class="section-sub">Dam handles your privacy in the background — no workflow changes required.</p>
+    <div class="section-label">功能特性</div>
+    <h2 class="section-title">设置一次，从此无忧。</h2>
+    <p class="section-sub">Dam 在后台默默守护你的隐私，无需改变任何工作习惯。</p>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">🔍</div>
-        <h3>Instant Detection</h3>
-        <p>Monitors AirPlay, Sidecar, Zoom, Teams, and any screen recording tool in real time.</p>
+        <h3>即时检测</h3>
+        <p>实时监测 AirPlay、Sidecar、Zoom、腾讯会议以及任何录屏工具。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">⚡</div>
-        <h3>Auto Quit or Minimize</h3>
-        <p>Chose whether each app should quit entirely or just minimize — your call, per app.</p>
+        <h3>自动退出或最小化</h3>
+        <p>为每个应用单独设置——退出还是最小化，完全由你决定。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">⌨️</div>
-        <h3>Hotkey Trigger</h3>
-        <p>Prefer manual control? Hit a customizable hotkey to instantly clear your screen.</p>
+        <h3>快捷键触发</h3>
+        <p>偏好手动控制？按下自定义快捷键，立刻清空屏幕。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🖥️</div>
-        <h3>Screen Type Awareness</h3>
-        <p>Sharing with a trusted colleague? Mark the screen as "Safe" — Dam will stand down.</p>
+        <h3>屏幕类型识别</h3>
+        <p>与可信同事共享？标记为"安全屏幕"，Dam 会暂停保护。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🪶</div>
-        <h3>Zero Footprint</h3>
-        <p>Lives quietly in your menu bar. No background services, no account required, no data collected.</p>
+        <h3>零打扰</h3>
+        <p>安静地驻留在菜单栏。无后台服务、无需注册账号、不收集任何数据。</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🍎</div>
-        <h3>Native macOS</h3>
-        <p>Built with SwiftUI. Feels right at home on macOS — fast, reliable, and battery-friendly.</p>
+        <h3>原生 macOS</h3>
+        <p>使用 SwiftUI 构建，与 macOS 完美融合——快速、稳定、省电。</p>
       </div>
     </div>
   </div>
@@ -479,23 +471,23 @@
 <!-- HOW IT WORKS -->
 <section class="how">
   <div class="section-inner">
-    <div class="section-label">How It Works</div>
-    <h2 class="section-title">Three steps to a safer screen.</h2>
+    <div class="section-label">使用方法</div>
+    <h2 class="section-title">三步，让屏幕共享更安全。</h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <h3>Add your apps</h3>
-        <p>Open Dam's settings and choose which apps are too sensitive to be seen during a share.</p>
+        <h3>添加应用</h3>
+        <p>打开 Dam 的设置，选择哪些应用不该在共享时被看到。</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <h3>Share freely</h3>
-        <p>Start any meeting or AirPlay session as you normally would. Dam runs silently in the background.</p>
+        <h3>正常共享</h3>
+        <p>像往常一样开会或 AirPlay 投屏，Dam 在后台静默运行。</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <h3>Stay protected</h3>
-        <p>The moment sharing starts, Dam quits or hides your selected apps — before anyone sees a thing.</p>
+        <h3>始终受保护</h3>
+        <p>共享开始的瞬间，Dam 退出或隐藏你选定的应用——在任何人看到之前。</p>
       </div>
     </div>
   </div>
@@ -503,17 +495,17 @@
 
 <!-- DOWNLOAD -->
 <section class="download" id="download">
-  <div class="section-label">Download</div>
-  <h2 class="section-title">Ready when you are.</h2>
-  <p class="section-sub">Dam is free. Install it once and stop worrying about your screen.</p>
+  <div class="section-label">立即下载</div>
+  <h2 class="section-title">准备好了，随时开始。</h2>
+  <p class="section-sub">Dam 完全免费。安装一次，从此不再担心屏幕共享。</p>
   <a class="btn-primary" href="https://github.com/zizaimini/dam-app/releases/download/v1.0.0/Dam.dmg">
     <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M10 2v11M6 9l4 4 4-4M3 17h14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Download Dam
+    下载 Dam
   </a>
   <p class="download-meta">
-    <span>Free</span>·
-    <span>macOS 13 Ventura or later</span>·
-    <span>Apple Silicon &amp; Intel</span>
+    <span>免费</span>·
+    <span>macOS 13 Ventura 或更高版本</span>·
+    <span>Apple Silicon 和 Intel</span>
   </p>
 </section>
 
@@ -521,10 +513,10 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <img src="icon.png" alt="Dam icon" />
+      <img src="icon.png" alt="Dam 图标" />
       Dam
     </div>
-    <p>© 2025 Dam. All rights reserved.</p>
+    <p>© 2025 Dam 保留所有权利</p>
   </div>
 </footer>
 
