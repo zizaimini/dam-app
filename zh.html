@@ -804,6 +804,158 @@
   </div>
 </section>
 
+<!-- FILE PRIVACY HIGHLIGHT -->
+<section style="padding:88px 24px;background:var(--gray-light);">
+  <div style="max-width:var(--max-w);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;" class="highlight-inner">
+    <div class="highlight-text">
+      <div class="section-label">文件隐私</div>
+      <h2 class="section-title">桌面上的文件，<br/>投屏时自动隐身。</h2>
+      <p class="section-sub">
+        把合同、财务截图、私人照片所在的文件夹加入保护列表。Dam 检测到公共投屏，这些文件夹会在 Finder 中立即隐藏——文件名都不会露出来。<br/><br/>
+        断开投屏后，Dam 只恢复由自己隐藏的内容，不影响你原本就设为隐藏的文件，精准还原，不留痕迹。
+      </p>
+    </div>
+    <div class="highlight-visual">
+      <div style="font-size:13px;font-weight:600;color:#aaa;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;">投屏开始</div>
+      <div style="font-size:11px;color:#bbb;margin-bottom:16px;">Dam 正在保护中…</div>
+      <div class="screen-row">
+        <div class="screen-info">
+          <span class="screen-icon">📁</span>
+          <div>
+            <div class="screen-name">工作合同 2026</div>
+            <div class="screen-sub">~/Documents/Contracts/</div>
+          </div>
+        </div>
+        <span class="badge-public">已隐藏</span>
+      </div>
+      <div class="screen-row">
+        <div class="screen-info">
+          <span class="screen-icon">📁</span>
+          <div>
+            <div class="screen-name">财务 · 账单截图</div>
+            <div class="screen-sub">~/Desktop/Finance/</div>
+          </div>
+        </div>
+        <span class="badge-public">已隐藏</span>
+      </div>
+      <div class="screen-row">
+        <div class="screen-info">
+          <span class="screen-icon">📁</span>
+          <div>
+            <div class="screen-name">私人照片</div>
+            <div class="screen-sub">~/Pictures/Personal/</div>
+          </div>
+        </div>
+        <span class="badge-public">已隐藏</span>
+      </div>
+      <div class="screen-row">
+        <div class="screen-info">
+          <span class="screen-icon">📂</span>
+          <div>
+            <div class="screen-name">项目演示文稿</div>
+            <div class="screen-sub">~/Desktop/Demo/</div>
+          </div>
+        </div>
+        <span class="badge-safe">正常显示</span>
+      </div>
+      <div style="margin-top:16px;padding:10px 12px;background:#f0faf5;border-radius:8px;font-size:12px;color:var(--green);font-weight:600;">
+        ✓ 投屏结束后自动还原，精准恢复
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BROWSER PRIVACY HIGHLIGHT -->
+<section style="padding:88px 24px;background:var(--white);">
+  <div style="max-width:var(--max-w);margin:0 auto;">
+    <div class="section-label">网页隐私</div>
+    <h2 class="section-title">浏览器里的秘密，<br/>投屏时一个都不留。</h2>
+    <p class="section-sub" style="margin-bottom:52px;">
+      设置哪些网站是「隐私域名」——网银、邮件、医疗、私人聊天。投屏开始，这些标签页会被自动关闭，或迁移到独立窗口并最小化，屏幕上彻底消失。投屏结束，选择自动恢复。
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">
+
+      <!-- Protected domains list -->
+      <div>
+        <div style="font-size:12px;font-weight:600;color:#aaa;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:14px;">你设置的隐私域名</div>
+        <div style="background:#f9f9f9;border:1px solid #e8e8e8;border-radius:var(--radius);overflow:hidden;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #f0f0f0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">🏦</span>
+              <div>
+                <div style="font-size:14px;font-weight:500;">*.bank.com</div>
+                <div style="font-size:11px;color:#aaa;">网上银行 · 所有子域</div>
+              </div>
+            </div>
+            <span class="badge-public">保护中</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #f0f0f0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">📧</span>
+              <div>
+                <div style="font-size:14px;font-weight:500;">mail.google.com</div>
+                <div style="font-size:11px;color:#aaa;">Gmail</div>
+              </div>
+            </div>
+            <span class="badge-public">保护中</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #f0f0f0;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">🏥</span>
+              <div>
+                <div style="font-size:14px;font-weight:500;">*.hospital.org</div>
+                <div style="font-size:11px;color:#aaa;">医疗记录</div>
+              </div>
+            </div>
+            <span class="badge-public">保护中</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 18px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">💬</span>
+              <div>
+                <div style="font-size:14px;font-weight:500;">web.telegram.org</div>
+                <div style="font-size:11px;color:#aaa;">Telegram 网页版</div>
+              </div>
+            </div>
+            <span class="badge-public">保护中</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action mode + browser support -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#aaa;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:14px;">投屏时的处理方式</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="background:#ffeaea;border:1px solid #fcc;border-radius:10px;padding:16px 18px;">
+              <div style="font-size:14px;font-weight:700;color:#c0392b;margin-bottom:4px;">关闭页面</div>
+              <div style="font-size:13px;color:#888;">直接关掉匹配的标签页，彻底从浏览器中消失</div>
+            </div>
+            <div style="background:#f0faf5;border:1px solid var(--green-mid);border-radius:10px;padding:16px 18px;">
+              <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:4px;">迁移并最小化</div>
+              <div style="font-size:13px;color:#888;">移到独立窗口后最小化，页面状态保留，投屏结束后可恢复</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#aaa;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:14px;">支持的浏览器</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--gray);">
+              <span style="color:var(--green);font-weight:700;">✓</span>
+              <span><strong style="color:var(--black);">Safari</strong> — 内置扩展，安装 Dam 自动获得</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--gray);">
+              <span style="color:var(--green);font-weight:700;">✓</span>
+              <span><strong style="color:var(--black);">Chrome · Arc · Edge</strong> — 通过扩展连接 Dam 同步保护</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- HOW IT WORKS -->
 <section class="how">
   <div class="section-inner">
