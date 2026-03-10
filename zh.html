@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dam — 屏幕投出去，隐私留下来。</title>
-  <meta name="description" content="Dam 在你共享屏幕的瞬间自动隐藏敏感应用。支持 AirPlay 投屏、Zoom / 腾讯会议等录屏场景。设置一次，终身生效。" />
+  <meta name="description" content="Dam 提供三层投屏隐私保护：自动隐藏敏感应用、自动隐藏私密文件夹、自动关闭私密网页标签。支持 AirPlay、Zoom、腾讯会议。设置一次，永久守护。" />
   <link rel="icon" type="image/png" href="icon.png" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -383,6 +383,30 @@
     }
     .hotkey-label { font-size: 13px; color: #888; }
 
+    /* ── HERO TRIO ── */
+    .hero-trio {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 0 auto 36px;
+      max-width: 640px;
+    }
+    .hero-trio-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gray-light);
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 12px 18px;
+      flex: 1;
+      min-width: 160px;
+    }
+    .hero-trio-icon { font-size: 22px; flex-shrink: 0; }
+    .hero-trio-name { font-size: 14px; font-weight: 700; color: var(--black); }
+    .hero-trio-desc { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
     /* ── DOWNLOAD CTA ── */
     .download { text-align: center; padding: 110px 24px; }
     .download .section-title { margin-bottom: 14px; }
@@ -438,12 +462,37 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">macOS 菜单栏应用 · 原生 Swift · 免费</div>
+  <div class="hero-badge">macOS 菜单栏应用 · 原生 Swift · 三层隐私保护</div>
   <h1>屏幕投出去，<br/><em>隐私留下来。</em></h1>
   <p class="hero-lead">
     Dam 在你 AirPlay 投屏或开启会议共享的瞬间，自动关闭或隐藏你的敏感应用。<br/>
     无需每次手动清场，设置一次，永久守护。
   </p>
+  <!-- Three-layer feature strip -->
+  <div class="hero-trio">
+    <div class="hero-trio-item">
+      <span class="hero-trio-icon">🛡️</span>
+      <div>
+        <div class="hero-trio-name">应用隐私</div>
+        <div class="hero-trio-desc">敏感 App 自动消失</div>
+      </div>
+    </div>
+    <div class="hero-trio-item">
+      <span class="hero-trio-icon">📁</span>
+      <div>
+        <div class="hero-trio-name">文件隐私</div>
+        <div class="hero-trio-desc">私密文件夹自动隐藏</div>
+      </div>
+    </div>
+    <div class="hero-trio-item">
+      <span class="hero-trio-icon">🌐</span>
+      <div>
+        <div class="hero-trio-name">网页隐私</div>
+        <div class="hero-trio-desc">私密标签页自动关闭</div>
+      </div>
+    </div>
+  </div>
+
   <div class="hero-actions">
     <a class="btn-primary" href="https://github.com/zizaimini/dam-app/releases/download/v1.0.0/Dam.dmg">
       <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M10 2v11M6 9l4 4 4-4M3 17h14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -517,6 +566,16 @@
         <h3>开会前的十分钟仪式感</h3>
         <p>关微信、关邮件、关密码管理器、关备忘录……每次共享前都要手动清一遍桌面，还总是漏掉几个。</p>
       </div>
+      <div class="problem-card">
+        <div class="problem-scene">场景 04 · 文件泄露</div>
+        <h3>「那个文件夹……他们看到了吗？」</h3>
+        <p>演示文档的时候，桌面上的财务文件夹、合同截图、私人照片也都暴露在屏幕上。关掉 App 不等于文件也看不见。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-scene">场景 05 · 浏览器标签</div>
+        <h3>浏览器里开着 50 个标签，哪些不该被看见？</h3>
+        <p>网银、邮件、医疗记录、私人对话——投屏开始，浏览器里的一切全都暴露了。就算你关了 App，标签还在。</p>
+      </div>
     </div>
   </div>
 </section>
@@ -526,7 +585,7 @@
   <div class="section-inner">
     <div class="section-label">功能</div>
     <h2 class="section-title">它在后台，你在前台。</h2>
-    <p class="section-sub">Dam 把所有防护藏在幕后，你只管开会演示，别的都不用管。</p>
+    <p class="section-sub">Dam 构建了三层投屏隐私防护——应用、文件、网页，全部自动处理。你只管开会演示，别的都不用管。</p>
     <div class="features-grid">
 
       <div class="feature-card">
@@ -577,6 +636,20 @@
           <li style="font-size:14px;color:var(--gray);line-height:1.6;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:var(--green);font-weight:700;">·</span><strong style="color:var(--black);">手势导航</strong>：左右滚动选择，上滑确认激活，触控板原生体验</li>
         </ul>
         <p style="margin-top:14px;font-size:13px;color:#aaa;">在设置中一键开启，⌥Tab 即刻替换为 Dam 切换器。不需要时随时关闭，恢复系统默认。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📁</div>
+        <div class="feature-scene">投屏 · 会议录屏 · AirPlay 公共场景</div>
+        <h3>私密文件夹，投屏时自动隐身</h3>
+        <p>把工作合同、财务截图、私人照片等敏感文件夹加入保护列表。一旦 Dam 检测到公共投屏，这些文件夹会在 Finder 中自动隐藏——对方看不见，连文件名都不会露出来。断开投屏，自动精准还原，只恢复 Dam 隐藏的内容，不影响你原本就设置为隐藏的文件。</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-scene">Safari · Chrome · Arc · 所有 Chromium 浏览器</div>
+        <h3>私密网页，投屏时自动关闭或隔离</h3>
+        <p>通过内置的浏览器扩展，你可以设置哪些域名是「隐私域名」——网银、邮件、医疗、私人聊天。投屏开始，这些标签页会被自动关闭，或迁移到独立窗口最小化，屏幕上彻底消失。投屏结束，可选自动恢复。Safari 扩展内置于 Dam，无需额外安装；Chrome、Arc 等 Chromium 浏览器通过扩展连接 Dam 同步保护。</p>
       </div>
 
       <div class="feature-card">
@@ -821,7 +894,7 @@
       <img src="icon.png" alt="Dam 图标" />
       Dam
     </div>
-    <p>© 2025 Dam · 保留所有权利</p>
+    <p>© 2026 Dam · 保留所有权利</p>
     <nav style="margin-top:10px;display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
       <a href="/legal/terms.html" style="color:#888;font-size:13px;text-decoration:none;">服务条款</a>
       <a href="/legal/privacy.html" style="color:#888;font-size:13px;text-decoration:none;">隐私政策</a>
