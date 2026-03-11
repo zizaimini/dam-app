@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dam 如何保护你的隐私</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  background: #f7f5ff;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px 24px;
+  overflow-x: hidden;
+}
+
+/* Soft gradient bg */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 700px 500px at 10% 50%, rgba(180,200,255,0.35) 0%, transparent 65%),
+    radial-gradient(ellipse 600px 500px at 90% 50%, rgba(255,180,220,0.3) 0%, transparent 65%),
+    radial-gradient(ellipse 800px 400px at 50% 100%, rgba(200,240,220,0.25) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+.page { position: relative; z-index: 1; width: 100%; max-width: 1200px; }
+
+/* TITLE */
+.title-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-bottom: 64px;
+}
+.title-star {
+  font-size: 32px;
+  animation: starFloat 3s ease-in-out infinite;
+}
+@keyframes starFloat {
+  0%,100%{ transform: translateY(0) rotate(-5deg); }
+  50%{ transform: translateY(-8px) rotate(5deg); }
+}
+h1 {
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 800;
+  color: #1a1a2e;
+  letter-spacing: -0.5px;
+}
+
+/* FLOW LAYOUT */
+.flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 0;
+  align-items: center;
+}
+
+/* ---- COLUMN: TRIGGERS ---- */
+.col-triggers { display: flex; flex-direction: column; gap: 24px; }
+
+/* ---- COLUMN: CENTER DAM ---- */
+.col-center { display: flex; justify-content: center; padding: 0 20px; }
+
+/* ---- COLUMN: EFFECTS ---- */
+.col-effects { display: flex; flex-direction: column; gap: 20px; }
+
+/* ---- ARROWS ---- */
+.col-arrow {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 8px; gap: 16px;
+}
+
+/* CARD BASE */
+.card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* TRIGGER CARDS */
+.trigger-card { width: 100%; }
+.trigger-illustration {
+  background: linear-gradient(135deg, #e8e6ff 0%, #dce8ff 100%);
+  height: 120px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.trigger-label {
+  padding: 14px 18px;
+  font-size: 14px; font-weight: 600;
+  color: #2a2a4a; text-align: center;
+}
+
+/* DAM CENTER NODE */
+.dam-node {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 16px;
+  width: 160px;
+}
+.dam-icon-wrap {
+  width: 100px; height: 100px;
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(120,100,255,0.2), 0 2px 8px rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.dam-icon-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(124,107,255,0.08), rgba(255,107,157,0.06));
+}
+.dam-icon-emoji { font-size: 44px; position: relative; z-index: 1; }
+.dam-pulse-ring {
+  position: absolute; inset: -6px;
+  border-radius: 34px;
+  border: 2px solid rgba(124,107,255,0.3);
+  animation: damPulse 2.5s ease-out infinite;
+}
+.dam-pulse-ring:nth-child(2) { inset: -14px; border-radius: 42px; animation-delay: 0.6s; }
+.dam-pulse-ring:nth-child(3) { inset: -22px; border-radius: 50px; animation-delay: 1.2s; }
+@keyframes damPulse {
+  0%{ opacity: 0.7; transform: scale(0.95); }
+  100%{ opacity: 0; transform: scale(1.08); }
+}
+.dam-label {
+  text-align: center;
+  font-size: 13px; color: #6b6b8a;
+  line-height: 1.5; font-weight: 500;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 12px; padding: 10px 14px;
+  backdrop-filter: blur(10px);
+}
+.dam-label strong { color: #4040a0; display: block; font-size: 14px; margin-bottom: 2px; }
+
+/* ARROWS SVG */
+.arrow-svg { overflow: visible; }
+.arrow-path {
+  fill: none;
+  stroke: #b0a8e0;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+  stroke-linecap: round;
+  animation: dashMove 1.5s linear infinite;
+}
+@keyframes dashMove { to { stroke-dashoffset: -20; } }
+.arrow-head { fill: #b0a8e0; }
+
+/* EFFECT CARDS */
+.effect-card { width: 100%; }
+.effect-illustration {
+  height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.effect-label {
+  padding: 14px 18px;
+}
+.effect-label strong {
+  display: block; font-size: 14px; font-weight: 700;
+  color: #1a1a2e; margin-bottom: 4px;
+}
+.effect-label p {
+  font-size: 12px; color: #7070a0; line-height: 1.5;
+}
+
+/* ====== ILLUSTRATIONS ====== */
+
+/* Trigger 1: Meeting share */
+.illo-meeting {
+  background: linear-gradient(135deg, #e0e8ff 0%, #ccd8ff 100%);
+}
+.zoom-window {
+  width: 150px; height: 90px;
+  background: #1a1a2e; border-radius: 10px;
+  overflow: hidden; position: relative;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.zoom-bar {
+  height: 22px; background: #111127;
+  display: flex; align-items: center; padding: 0 10px; gap: 5px;
+}
+.zoom-dot { width: 7px; height: 7px; border-radius: 50%; }
+.zoom-body {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4px; padding: 6px;
+}
+.zoom-face {
+  border-radius: 6px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+.rec-badge {
+  position: absolute; top: 4px; right: 6px;
+  background: #ff453a; border-radius: 4px;
+  padding: 2px 6px; font-size: 9px; color: white; font-weight: 700;
+  animation: recBlink 1.5s ease-in-out infinite;
+}
+@keyframes recBlink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* Trigger 2: External display */
+.illo-display {
+  background: linear-gradient(135deg, #e0f0ff 0%, #cce4f5 100%);
+}
+.display-setup {
+  display: flex; align-items: flex-end; gap: 12px;
+}
+.laptop-mini {
+  width: 64px; height: 44px; position: relative;
+}
+.laptop-screen-mini {
+  width: 64px; height: 40px; background: #1a1a2e;
+  border-radius: 6px 6px 0 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.laptop-base-mini {
+  width: 70px; height: 4px; background: #c0c0c8; border-radius: 0 0 4px 4px;
+  margin: 0 -3px;
+}
+.connect-arrow-small {
+  font-size: 18px; color: #7090d0; margin-bottom: 4px;
+  animation: arrowPulse 1.5s ease-in-out infinite;
+}
+@keyframes arrowPulse { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
+.monitor-mini {
+  width: 80px; height: 56px;
+  background: #1a1a2e; border-radius: 8px;
+  border: 2px solid #8899cc;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 1px rgba(136,153,204,0.3), 0 4px 16px rgba(0,0,0,0.2);
+  position: relative;
+}
+.monitor-glow {
+  position: absolute; inset: -4px; border-radius: 12px;
+  box-shadow: 0 0 20px rgba(100,150,255,0.4);
+  animation: monitorGlow 2s ease-in-out infinite;
+}
+@keyframes monitorGlow { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+/* Effect 1: Close apps */
+.illo-close {
+  background: linear-gradient(135deg, #fde8ef 0%, #fcd4e4 100%);
+}
+.apps-closing {
+  display: flex; gap: 8px; align-items: center;
+}
+.app-icon-mini {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  position: relative;
+  animation: appClose 2.5s ease-in-out infinite;
+}
+.app-icon-mini:nth-child(2) { animation-delay: 0.3s; }
+.app-icon-mini:nth-child(3) { animation-delay: 0.6s; }
+@keyframes appClose {
+  0%,60%{ opacity: 1; transform: scale(1); }
+  80%{ opacity: 0; transform: scale(0.7); }
+  90%,100%{ opacity: 1; transform: scale(1); }
+}
+.app-icon-mini::after {
+  content: '✕';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,69,58,0.85); border-radius: 12px;
+  color: white; font-size: 14px; font-weight: 700;
+  opacity: 0;
+  animation: appCloseX 2.5s ease-in-out infinite;
+}
+.app-icon-mini:nth-child(2)::after { animation-delay: 0.3s; }
+.app-icon-mini:nth-child(3)::after { animation-delay: 0.6s; }
+@keyframes appCloseX {
+  0%,60%{ opacity: 0; }
+  70%,80%{ opacity: 1; }
+  90%,100%{ opacity: 0; }
+}
+
+/* Effect 2: Hide folders */
+.illo-folders {
+  background: linear-gradient(135deg, #e8f5e0 0%, #d8f0d0 100%);
+}
+.finder-mini {
+  width: 160px; height: 90px; background: rgba(255,255,255,0.9);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.finder-title-bar {
+  height: 22px; background: #e8e8ec;
+  display: flex; align-items: center; padding: 0 8px; gap: 4px;
+}
+.finder-dot { width: 7px; height: 7px; border-radius: 50%; }
+.finder-body { display: flex; gap: 6px; padding: 8px; }
+.finder-sidebar { width: 44px; background: #f0f0f5; border-radius: 6px; }
+.finder-content { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.folder-item {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: 14px;
+}
+.folder-name { font-size: 8px; color: #555; }
+.folder-item.hidden {
+  animation: folderHide 3s ease-in-out infinite;
+}
+.folder-item:nth-child(2).hidden { animation-delay: 0.5s; }
+@keyframes folderHide {
+  0%,40%{ opacity: 1; transform: scale(1); }
+  55%,80%{ opacity: 0.1; transform: scale(0.8); }
+  95%,100%{ opacity: 1; transform: scale(1); }
+}
+
+/* Effect 3: Browser tabs */
+.illo-browser {
+  background: linear-gradient(135deg, #fff0e0 0%, #ffe4cc 100%);
+}
+.browser-mini {
+  width: 170px; height: 90px; background: white;
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.browser-tabs {
+  height: 26px; background: #f0f0f4;
+  display: flex; align-items: flex-end; padding: 0 6px; gap: 3px;
+}
+.b-tab {
+  height: 20px; border-radius: 6px 6px 0 0;
+  background: white; padding: 0 8px;
+  font-size: 9px; display: flex; align-items: center; gap: 3px;
+  color: #444; white-space: nowrap; overflow: hidden; max-width: 52px;
+}
+.b-tab.hidden-tab {
+  background: #ffe0df;
+  animation: tabHide 3s ease-in-out infinite;
+}
+.b-tab:nth-child(2).hidden-tab { animation-delay: 0.4s; }
+@keyframes tabHide {
+  0%,40%{ opacity: 1; max-width: 52px; }
+  55%,80%{ opacity: 0; max-width: 0; padding: 0; }
+  95%,100%{ opacity: 1; max-width: 52px; padding: 0 8px; }
+}
+.browser-bar {
+  height: 22px; background: #f8f8fa;
+  display: flex; align-items: center; padding: 0 8px;
+}
+.browser-url { font-size: 9px; color: #999; background: #efefef; border-radius: 4px; padding: 2px 8px; }
+.browser-content { padding: 8px; display: flex; flex-direction: column; gap: 5px; }
+.b-line { height: 6px; background: #f0f0f4; border-radius: 3px; }
+
+/* Curved arrows between columns */
+.arrows-left {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%;
+  position: relative;
+}
+.arrows-right {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%;
+  position: relative;
+}
+
+/* ENTRANCE ANIMATIONS */
+.fade-up {
+  opacity: 0; transform: translateY(24px);
+  animation: fadeUp 0.6s ease-out forwards;
+}
+.col-triggers .trigger-card:nth-child(1) { animation-delay: 0.1s; }
+.col-triggers .trigger-card:nth-child(2) { animation-delay: 0.25s; }
+.col-center .dam-node { animation-delay: 0.4s; }
+.col-effects .effect-card:nth-child(1) { animation-delay: 0.55s; }
+.col-effects .effect-card:nth-child(2) { animation-delay: 0.7s; }
+.col-effects .effect-card:nth-child(3) { animation-delay: 0.85s; }
+.col-arrow svg { animation-delay: 0.45s; }
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .flow {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 24px;
+  }
+  .col-arrow { flex-direction: row; transform: rotate(90deg); padding: 0; }
+  .flow > * { width: 100%; }
+  .col-triggers, .col-effects { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .trigger-card, .effect-card { width: calc(50% - 12px); min-width: 220px; }
+  .col-center { padding: 0; }
+  .arrows-left, .arrows-right { height: 60px; }
+}
+
+/* FOOTER NOTE */
+.footnote {
+  text-align: center; margin-top: 48px;
+  font-size: 13px; color: rgba(60,60,100,0.5);
+  animation: fadeUp 0.6s 1s ease-out forwards; opacity: 0;
+}
+.footnote a { color: #7c6bff; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="title-row fade-up" style="animation-delay:0s">
+    <span class="title-star">🛡️</span>
+    <h1>Dam 如何保护你的隐私</h1>
+  </div>
+
+  <div class="flow">
+
+    <!-- TRIGGERS -->
+    <div class="col-triggers">
+
+      <!-- Trigger 1: Meeting -->
+      <div class="card trigger-card fade-up">
+        <div class="trigger-illustration illo-meeting">
+          <div class="zoom-window">
+            <div class="zoom-bar">
+              <div class="zoom-dot" style="background:#ff5f57"></div>
+              <div class="zoom-dot" style="background:#febc2e"></div>
+              <div class="zoom-dot" style="background:#28c840"></div>
+            </div>
+            <div class="zoom-body">
+              <div class="zoom-face" style="background:#2a2a4a">🧑</div>
+              <div class="zoom-face" style="background:#1e2040">👩</div>
+              <div class="zoom-face" style="background:#252545">🧑‍💻</div>
+              <div class="zoom-face" style="background:#1a1a38">👨</div>
+            </div>
+            <div class="rec-badge">● REC</div>
+          </div>
+        </div>
+        <div class="trigger-label">会议屏幕共享</div>
+      </div>
+
+      <!-- Trigger 2: External display -->
+      <div class="card trigger-card fade-up">
+        <div class="trigger-illustration illo-display">
+          <div class="display-setup">
+            <div class="laptop-mini">
+              <div class="laptop-screen-mini">
+                <span style="font-size:18px">💻</span>
+              </div>
+              <div class="laptop-base-mini"></div>
+            </div>
+            <div class="connect-arrow-small">→</div>
+            <div class="monitor-mini">
+              <div class="monitor-glow"></div>
+              <span style="font-size:22px;position:relative;z-index:1">🖥️</span>
+            </div>
+          </div>
+        </div>
+        <div class="trigger-label">连接到公开显示器</div>
+      </div>
+
+    </div>
+
+    <!-- ARROW LEFT -->
+    <div class="col-arrow fade-up" style="animation-delay:0.38s">
+      <svg class="arrow-svg" width="60" height="200" viewBox="0 0 60 200">
+        <!-- top arrow pointing right to center -->
+        <path class="arrow-path" d="M 10,50 Q 50,50 50,100" />
+        <polygon class="arrow-head" points="46,92 54,92 50,103" />
+        <!-- bottom arrow pointing right to center -->
+        <path class="arrow-path" d="M 10,150 Q 50,150 50,100" style="animation-delay:0.3s"/>
+        <polygon class="arrow-head" points="46,97 54,97 50,88" transform="rotate(180 50 100)"/>
+      </svg>
+    </div>
+
+    <!-- DAM CENTER -->
+    <div class="col-center">
+      <div class="dam-node fade-up" style="animation-delay:0.4s">
+        <div style="position:relative">
+          <div class="dam-pulse-ring"></div>
+          <div class="dam-pulse-ring"></div>
+          <div class="dam-pulse-ring"></div>
+          <div class="dam-icon-wrap">
+            <span class="dam-icon-emoji">🌊</span>
+          </div>
+        </div>
+        <div class="dam-label">
+          <strong>Dam</strong>
+          后台低成本<br>实时监测
+        </div>
+      </div>
+    </div>
+
+    <!-- ARROW RIGHT -->
+    <div class="col-arrow fade-up" style="animation-delay:0.5s">
+      <svg class="arrow-svg" width="60" height="260" viewBox="0 0 60 260">
+        <!-- top -->
+        <path class="arrow-path" d="M 10,130 Q 10,50 50,40" />
+        <polygon class="arrow-head" points="42,37 52,37 50,48" />
+        <!-- middle -->
+        <path class="arrow-path" d="M 10,130 L 50,130" style="animation-delay:0.2s" />
+        <polygon class="arrow-head" points="44,126 54,130 44,134" />
+        <!-- bottom -->
+        <path class="arrow-path" d="M 10,130 Q 10,210 50,220" style="animation-delay:0.4s"/>
+        <polygon class="arrow-head" points="42,213 52,213 50,224" transform="rotate(180 50 218)"/>
+      </svg>
+    </div>
+
+    <!-- EFFECTS -->
+    <div class="col-effects">
+
+      <!-- Effect 1: Close apps -->
+      <div class="card effect-card fade-up" style="animation-delay:0.55s">
+        <div class="effect-illustration illo-close">
+          <div class="apps-closing">
+            <div class="app-icon-mini" style="background:#dcefff">💬</div>
+            <div class="app-icon-mini" style="background:#fff0dc">🏦</div>
+            <div class="app-icon-mini" style="background:#ffeaea">📧</div>
+          </div>
+        </div>
+        <div class="effect-label">
+          <strong>关闭 / 最小化隐私 App</strong>
+          <p>微信、银行、邮件等敏感应用立即退出或收至 Dock，屏幕只剩工作内容</p>
+        </div>
+      </div>
+
+      <!-- Effect 2: Hide folders -->
+      <div class="card effect-card fade-up" style="animation-delay:0.7s">
+        <div class="effect-illustration illo-folders">
+          <div class="finder-mini">
+            <div class="finder-title-bar">
+              <div class="finder-dot" style="background:#ff5f57"></div>
+              <div class="finder-dot" style="background:#febc2e"></div>
+              <div class="finder-dot" style="background:#28c840"></div>
+            </div>
+            <div class="finder-body">
+              <div class="finder-sidebar"></div>
+              <div class="finder-content">
+                <div class="folder-item">
+                  <span>📁</span>
+                  <span class="folder-name">工作</span>
+                </div>
+                <div class="folder-item hidden">
+                  <span>📁</span>
+                  <span class="folder-name">私人照片</span>
+                </div>
+                <div class="folder-item hidden">
+                  <span>📁</span>
+                  <span class="folder-name">财务</span>
+                </div>
+                <div class="folder-item">
+                  <span>📁</span>
+                  <span class="folder-name">项目</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="effect-label">
+          <strong>隐藏隐私文件夹</strong>
+          <p>自动隐藏桌面和 Finder 中的私密文件夹，并关闭已打开的隐私文件夹窗口</p>
+        </div>
+      </div>
+
+      <!-- Effect 3: Browser tabs -->
+      <div class="card effect-card fade-up" style="animation-delay:0.85s">
+        <div class="effect-illustration illo-browser">
+          <div class="browser-mini">
+            <div class="browser-tabs">
+              <div class="b-tab">📊 工作文档</div>
+              <div class="b-tab hidden-tab">🏦 银行</div>
+              <div class="b-tab hidden-tab">📧 邮件</div>
+            </div>
+            <div class="browser-bar">
+              <div class="browser-url">https://work.example.com</div>
+            </div>
+            <div class="browser-content">
+              <div class="b-line" style="width:80%"></div>
+              <div class="b-line" style="width:60%"></div>
+              <div class="b-line" style="width:70%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="effect-label">
+          <strong>隐藏隐私浏览器标签页</strong>
+          <p>银行、邮件等敏感标签页自动关闭，投屏结束后可一键恢复</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="footnote">
+    <a href="https://dam.astrocean.love">dam.astrocean.love</a> · macOS 隐私保护
+  </p>
+</div>
+</body>
+</html>
