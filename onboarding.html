@@ -393,14 +393,15 @@ body {
 /* ============================================
    PAGE 2: SCREEN MARKING
    ============================================ */
-.p2-body { display:flex; gap:48px; align-items:center; width:100%; }
-.p2-text { flex:1; }
+.p2-body { display:flex; flex-direction:column; align-items:center; gap:28px; width:100%; }
+.p2-vis { width:460px; flex-shrink:0; }
+.p2-text { width:100%; max-width:600px; }
 .p2-text .lead {
   font-size:15px; color:#3a3a5a; line-height:1.8;
-  margin-bottom:28px;
+  margin-bottom:20px; text-align:center;
 }
 .p2-text .lead strong { color:#1a1a2e; }
-.p2-rules { display:flex;flex-direction:column;gap:14px;margin-bottom:20px; }
+.p2-rules { display:flex;flex-direction:column;gap:14px;margin-bottom:16px; }
 .rule-item { display:flex;gap:12px;align-items:flex-start; }
 .rule-dot { width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0; }
 .rule-text { font-size:14px;color:#4a4a6a;line-height:1.6; }
@@ -412,7 +413,6 @@ body {
   border-left:3px solid rgba(59,91,219,.3);
   border-radius:0 8px 8px 0;
 }
-.p2-vis { width:340px;flex-shrink:0; }
 
 /* fake loading screen */
 .fake-screen {
@@ -746,6 +746,16 @@ body {
 
     <div class="content">
       <div class="p2-body">
+        <div class="p2-vis">
+          <div class="fake-screen">
+            <div class="fake-screen-blur"></div>
+            <div class="fake-loading">
+              <div class="fake-spinner"></div>
+            </div>
+          </div>
+          <p class="screen-caption">观众看到的是「系统准备中」，而非隐私保护操作</p>
+        </div>
+
         <div class="p2-text">
           <p class="lead">
             每次接入<strong>新的有线屏幕或 AirPlay 设备</strong>时，Dam 会在所有外部屏幕上显示一个<strong>假的加载中页面</strong>——对观众来说，这看起来像是系统正在准备共享，完全不会察觉你正在做隐私保护。
@@ -764,26 +774,6 @@ body {
 
           <div class="p2-note">
             每台显示器只需标记一次——Dam 通过硬件 ID 记住你的选择，下次接入同一屏幕自动执行，无需再次确认。你可以随时在设置中修改。
-          </div>
-        </div>
-
-        <div class="p2-vis">
-          <div class="fake-screen">
-            <div class="fake-screen-blur"></div>
-            <div class="fake-loading">
-              <div class="fake-spinner"></div>
-            </div>
-          </div>
-          <p class="screen-caption">观众看到的是「系统准备中」，而非隐私保护操作</p>
-
-          <div class="circle-diag">
-            <div class="c-outer">
-              <div class="c-label-out">点击圆圈外 → 公开</div>
-              <div class="c-inner">
-                🛡️
-                <div class="c-label-in">点击圆圈内 → 私人</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
