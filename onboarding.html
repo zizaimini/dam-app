@@ -103,14 +103,20 @@ body {
    PAGE 1: FLOW DIAGRAM
    ============================================ */
 .flow-grid {
-  display: grid;
-  grid-template-columns: 1fr 56px 1fr 56px 1fr;
-  gap: 0;
+  display: flex;
   align-items: center;
-  height: 380px;
+  gap: 32px;
+  position: relative;
+  width: 100%;
 }
-
-.col-triggers, .col-effects { display: flex; flex-direction: column; gap: 20px; height: 100%; justify-content: center; }
+.flow-arrows-svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible; z-index: 0;
+}
+.col-triggers, .col-effects { display: flex; flex-direction: column; gap: 16px; flex: 1; position: relative; z-index: 1; }
+.dam-col { position: relative; z-index: 1; flex-shrink: 0; }
 
 /* trigger/effect cards */
 .f-card {
@@ -524,10 +530,11 @@ body {
     </div>
 
     <div class="content">
-      <div class="flow-grid">
+      <div class="flow-grid" id="flowWrap">
+        <svg class="flow-arrows-svg" id="arrowSvg"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#b0a8e0"/></marker></defs></svg>
 
         <!-- TRIGGERS -->
-        <div class="col-triggers">
+        <div class="col-triggers" id="colTriggers">
           <div class="f-card">
             <div class="f-card-illo illo-meet">
               <div class="meet-win">
@@ -600,18 +607,8 @@ body {
           </div>
         </div>
 
-        <!-- ARROW LEFT -->
-        <div class="col-arrow">
-          <svg class="arrow-svg" width="56" height="200" viewBox="0 0 56 200">
-            <path class="a-path" d="M8,60 Q44,60 44,100"/>
-            <polygon class="a-head" points="40,92 48,92 44,103"/>
-            <path class="a-path" d="M8,140 Q44,140 44,100" style="animation-delay:.4s"/>
-            <polygon class="a-head" points="40,97 48,97 44,88" transform="rotate(180 44 100)"/>
-          </svg>
-        </div>
-
         <!-- DAM CENTER -->
-        <div style="display:flex;justify-content:center">
+        <div class="dam-col" style="display:flex;justify-content:center">
           <div class="dam-center">
             <div style="position:relative">
               <div class="dam-ring"></div>
@@ -628,20 +625,8 @@ body {
           </div>
         </div>
 
-        <!-- ARROW RIGHT -->
-        <div class="col-arrow">
-          <svg class="arrow-svg" width="56" height="280" viewBox="0 0 56 280">
-            <path class="a-path" d="M8,140 Q8,55 48,44"/>
-            <polygon class="a-head" points="40,41 50,41 48,53"/>
-            <path class="a-path" d="M8,140 L48,140" style="animation-delay:.25s"/>
-            <polygon class="a-head" points="42,136 52,140 42,144"/>
-            <path class="a-path" d="M8,140 Q8,225 48,236" style="animation-delay:.5s"/>
-            <polygon class="a-head" points="40,229 50,229 48,241" transform="rotate(180 48 235)"/>
-          </svg>
-        </div>
-
         <!-- EFFECTS -->
-        <div class="col-effects">
+        <div class="col-effects" id="colEffects">
           <div class="f-card">
             <div class="f-card-illo illo-close">
               <div class="apps-row">
@@ -868,6 +853,61 @@ body {
 <script>
 let current = 0;
 
+function drawArrows() {
+  const wrap = document.getElementById('flowWrap');
+  const svg = document.getElementById('arrowSvg');
+  if (!wrap || !svg) return;
+  const wr = wrap.getBoundingClientRect();
+  function rc(el) {
+    const r = el.getBoundingClientRect();
+    return { cx: r.left - wr.left + r.width/2, cy: r.top - wr.top + r.height/2,
+             l: r.left - wr.left, r: r.right - wr.left };
+  }
+  const triggers = [...wrap.querySelectorAll('#colTriggers .f-card')];
+  const dam = wrap.querySelector('.dam-icon-box');
+  const effects = [...wrap.querySelectorAll('#colEffects .f-card')];
+  if (!dam || !triggers.length || !effects.length) return;
+  const d = rc(dam);
+  // Remove old paths (keep defs)
+  [...svg.querySelectorAll('path.a-arrow')].forEach(p => p.remove());
+  const delays = [0, 0.4, 0.15, 0.3, 0.5];
+  let di = 0;
+  triggers.forEach(t => {
+    const tr = rc(t);
+    const x1 = tr.r + 2, y1 = tr.cy, x2 = d.l - 2, y2 = d.cy;
+    const mx = (x1 + x2) / 2;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('class','a-arrow');
+    path.setAttribute('d',`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke','#b0a8e0');
+    path.setAttribute('stroke-width','2.5');
+    path.setAttribute('stroke-dasharray','6 4');
+    path.setAttribute('stroke-linecap','round');
+    path.setAttribute('marker-end','url(#ah)');
+    path.style.animation = `dashFlow 1.2s linear ${delays[di++]||0}s infinite`;
+    svg.appendChild(path);
+  });
+  effects.forEach(e => {
+    const er = rc(e);
+    const x1 = d.r + 2, y1 = d.cy, x2 = er.l - 2, y2 = er.cy;
+    const mx = (x1 + x2) / 2;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('class','a-arrow');
+    path.setAttribute('d',`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke','#b0a8e0');
+    path.setAttribute('stroke-width','2.5');
+    path.setAttribute('stroke-dasharray','6 4');
+    path.setAttribute('stroke-linecap','round');
+    path.setAttribute('marker-end','url(#ah)');
+    path.style.animation = `dashFlow 1.2s linear ${delays[di++]||0}s infinite`;
+    svg.appendChild(path);
+  });
+}
+window.addEventListener('load', () => setTimeout(drawArrows, 100));
+window.addEventListener('resize', drawArrows);
+
 function goTo(n) {
   const prev = document.getElementById('page-' + current);
   prev.classList.remove('active');
@@ -877,6 +917,7 @@ function goTo(n) {
   current = n;
   const next = document.getElementById('page-' + current);
   next.classList.add('active');
+  if (n === 0) setTimeout(drawArrows, 50);
 
   // update dots
   document.querySelectorAll('.dot').forEach((d, i) => {
