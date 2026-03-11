@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dam · 快速上手</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  background: #f0eeff;
+}
+
+/* BACKGROUND */
+.bg {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 900px 600px at 0% 50%, rgba(180,205,255,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse 700px 600px at 100% 50%, rgba(255,185,225,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 400px at 50% 100%, rgba(185,240,210,0.25) 0%, transparent 55%),
+    #f4f0ff;
+}
+
+/* PAGES CONTAINER */
+.pages {
+  position: relative; z-index: 1;
+  width: 100%; height: 100%;
+  display: flex;
+}
+
+/* EACH PAGE */
+.page {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 56px 48px 0;
+  opacity: 0; pointer-events: none;
+  transform: translateX(60px);
+  transition: opacity 0.45s cubic-bezier(.4,0,.2,1), transform 0.45s cubic-bezier(.4,0,.2,1);
+}
+.page.active {
+  opacity: 1; pointer-events: all;
+  transform: translateX(0);
+}
+.page.exit {
+  opacity: 0;
+  transform: translateX(-60px);
+  pointer-events: none;
+}
+
+/* PAGE TITLE */
+.page-title {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 40px; align-self: flex-start;
+}
+.page-title .star { font-size: 28px; animation: starFloat 3s ease-in-out infinite; }
+@keyframes starFloat { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg) translateY(-4px)} }
+.page-title h1 { font-size: 26px; font-weight: 800; color: #1a1a2e; letter-spacing: -0.5px; }
+
+/* CONTENT AREA */
+.content { flex: 1; width: 100%; max-width: 1100px; overflow: hidden; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: absolute; bottom: 40px; left: 0; right: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.btn-primary {
+  background: #3b5bdb; color: white;
+  border: none; border-radius: 12px;
+  padding: 13px 40px; font-size: 16px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0 4px 16px rgba(59,91,219,0.35);
+}
+.btn-primary:hover { background: #2f4cbf; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-skip {
+  background: none; border: none;
+  color: rgba(80,80,120,0.55); font-size: 14px;
+  cursor: pointer; font-family: inherit;
+  transition: color 0.2s;
+}
+.btn-skip:hover { color: rgba(80,80,120,0.85); }
+
+/* PROGRESS DOTS */
+.progress-dots {
+  position: absolute; bottom: 120px; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 8px;
+}
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(59,91,219,0.2);
+  transition: background 0.3s, transform 0.3s;
+}
+.dot.active { background: #3b5bdb; transform: scale(1.2); }
+
+/* ============================================
+   PAGE 1: FLOW DIAGRAM
+   ============================================ */
+.flow-grid {
+  display: grid;
+  grid-template-columns: 1fr 56px 1fr 56px 1fr;
+  gap: 0;
+  align-items: center;
+  height: 380px;
+}
+
+.col-triggers, .col-effects { display: flex; flex-direction: column; gap: 20px; height: 100%; justify-content: center; }
+
+/* trigger/effect cards */
+.f-card {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.85);
+  border-radius: 18px; overflow: hidden;
+  box-shadow: 0 3px 20px rgba(0,0,0,0.07);
+  transition: transform 0.25s;
+}
+.f-card:hover { transform: translateY(-3px); }
+.f-card-illo {
+  height: 90px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; position: relative;
+}
+.f-card-label {
+  padding: 10px 14px; font-size: 13px; font-weight: 600;
+  color: #2a2a4a; text-align: center;
+}
+
+/* center dam node */
+.dam-center {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.dam-icon-box {
+  width: 88px; height: 88px; border-radius: 24px;
+  background: white;
+  box-shadow: 0 6px 28px rgba(100,80,255,0.18), 0 2px 8px rgba(0,0,0,0.07);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; position: relative; overflow: hidden;
+}
+.dam-icon-box::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg,rgba(124,107,255,0.08),rgba(255,107,157,0.05));
+}
+.dam-ring {
+  position:absolute; inset:-8px; border-radius:32px;
+  border:2px solid rgba(100,80,255,0.25);
+  animation: ringPulse 2.5s ease-out infinite;
+}
+.dam-ring:nth-child(2){ inset:-18px; border-radius:42px; animation-delay:.7s; }
+.dam-ring:nth-child(3){ inset:-28px; border-radius:52px; animation-delay:1.4s; }
+@keyframes ringPulse { 0%{opacity:.7;transform:scale(.94)} 100%{opacity:0;transform:scale(1.06)} }
+
+.dam-info {
+  text-align: center;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 12px; padding: 10px 14px;
+}
+.dam-info strong { display:block; font-size:13px; color:#3030a0; margin-bottom:3px; }
+.dam-info small { font-size:11px; color:#8888aa; line-height:1.5; }
+
+/* arrows */
+.col-arrow { display:flex; align-items:center; justify-content:center; height:100%; }
+.arrow-svg { overflow:visible; }
+.a-path {
+  fill:none; stroke:#b0a8e0; stroke-width:2.5;
+  stroke-dasharray:6 4; stroke-linecap:round;
+  animation: dashFlow 1.2s linear infinite;
+}
+.a-head { fill:#b0a8e0; }
+@keyframes dashFlow { to{stroke-dashoffset:-20} }
+
+/* illo: meeting */
+.illo-meet { background:linear-gradient(135deg,#e2e8ff,#ccd4ff); }
+.meet-win {
+  width:120px; height:72px; background:#151530;
+  border-radius:8px; overflow:hidden;
+  box-shadow:0 3px 12px rgba(0,0,0,0.2); position:relative;
+}
+.meet-bar { height:18px; background:#101025; display:flex; align-items:center; padding:0 7px; gap:4px; }
+.meet-dot { width:6px;height:6px;border-radius:50%; }
+.meet-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; padding:4px; }
+.meet-face { border-radius:4px; height:20px; display:flex;align-items:center;justify-content:center;font-size:9px; }
+.rec-pill {
+  position:absolute;top:3px;right:5px;
+  background:#ff453a;border-radius:3px;
+  padding:1px 5px;font-size:8px;font-weight:700;color:white;
+  animation:recBlink 1.5s ease-in-out infinite;
+}
+@keyframes recBlink{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* illo: display */
+.illo-disp { background:linear-gradient(135deg,#e0f0ff,#cce2f5); }
+.disp-setup { display:flex;align-items:flex-end;gap:10px; }
+.laptop-s { width:52px;height:36px;position:relative; }
+.laptop-s-scr { width:52px;height:32px;background:#1a1a2e;border-radius:5px 5px 0 0;display:flex;align-items:center;justify-content:center;font-size:14px; }
+.laptop-s-base { width:58px;height:3px;background:#c0c0c8;border-radius:0 0 3px 3px;margin:0 -3px; }
+.conn-arr { font-size:14px;color:#7090d0;margin-bottom:3px;animation:connPulse 1.5s ease-in-out infinite; }
+@keyframes connPulse{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+.mon-s {
+  width:66px;height:46px;background:#1a1a2e;border-radius:6px;
+  border:2px solid #8899cc;display:flex;align-items:center;justify-content:center;font-size:18px;
+  box-shadow:0 0 18px rgba(100,150,255,.35);
+  animation:monGlow 2s ease-in-out infinite;
+}
+@keyframes monGlow{0%,100%{box-shadow:0 0 10px rgba(100,150,255,.2)}50%{box-shadow:0 0 24px rgba(100,150,255,.5)}}
+
+/* illo: close apps */
+.illo-close { background:linear-gradient(135deg,#fde8ef,#fcd4e4); }
+.apps-row { display:flex;gap:8px; }
+.app-i {
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  position:relative; animation:appDie 2.8s ease-in-out infinite;
+}
+.app-i:nth-child(2){animation-delay:.3s}
+.app-i:nth-child(3){animation-delay:.6s}
+@keyframes appDie{0%,55%{opacity:1;transform:scale(1)}75%{opacity:0;transform:scale(.6)}90%,100%{opacity:1;transform:scale(1)}}
+.app-i::after {
+  content:'✕';position:absolute;inset:0;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,69,58,.88);color:white;font-size:13px;font-weight:700;opacity:0;
+  animation:appX 2.8s ease-in-out infinite;
+}
+.app-i:nth-child(2)::after{animation-delay:.3s}
+.app-i:nth-child(3)::after{animation-delay:.6s}
+@keyframes appX{0%,55%{opacity:0}65%,75%{opacity:1}90%,100%{opacity:0}}
+
+/* illo: folders */
+.illo-fold { background:linear-gradient(135deg,#e8f5e0,#d8f0cc); }
+.fold-row { display:flex;gap:10px; }
+.fold-item { display:flex;flex-direction:column;align-items:center;gap:2px;font-size:18px; }
+.fold-name { font-size:8px;color:#666; }
+.fold-item.h { animation:foldHide 3s ease-in-out infinite; }
+.fold-item.h:nth-child(2){animation-delay:.5s}
+@keyframes foldHide{0%,35%{opacity:1;transform:scale(1)}50%,75%{opacity:.1;transform:scale(.75)}90%,100%{opacity:1;transform:scale(1)}}
+
+/* illo: browser */
+.illo-brow { background:linear-gradient(135deg,#fff0e0,#ffe4cc); }
+.brow-win { width:140px;height:72px;background:white;border-radius:8px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.1); }
+.brow-tabs { height:20px;background:#f0f0f4;display:flex;align-items:flex-end;padding:0 5px;gap:2px; }
+.b-tab { height:16px;border-radius:4px 4px 0 0;background:white;padding:0 6px;font-size:8px;display:flex;align-items:center;white-space:nowrap;overflow:hidden; }
+.b-tab.ht {
+  background:#ffe0df;
+  animation:tabDie 3s ease-in-out infinite;
+}
+.b-tab.ht:nth-child(2){animation-delay:.4s}
+@keyframes tabDie{0%,35%{opacity:1;max-width:60px}50%,75%{opacity:0;max-width:0;padding:0}90%,100%{opacity:1;max-width:60px;padding:0 6px}}
+.brow-url { height:16px;background:#f8f8fa;display:flex;align-items:center;padding:0 6px; }
+.url-bar { font-size:7px;color:#999;background:#efefef;border-radius:3px;padding:1px 6px; }
+.brow-body { padding:6px;display:flex;flex-direction:column;gap:4px; }
+.b-line { height:5px;background:#f0f0f4;border-radius:2px; }
+
+/* ============================================
+   PAGE 2: SCREEN MARKING
+   ============================================ */
+.p2-body { display:flex; gap:48px; align-items:flex-start; width:100%; }
+.p2-text { flex:1; }
+.p2-text .lead {
+  font-size:15px; color:#3a3a5a; line-height:1.8;
+  margin-bottom:28px;
+}
+.p2-text .lead strong { color:#1a1a2e; }
+.p2-rules { display:flex;flex-direction:column;gap:14px;margin-bottom:20px; }
+.rule-item { display:flex;gap:12px;align-items:flex-start; }
+.rule-dot { width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0; }
+.rule-text { font-size:14px;color:#4a4a6a;line-height:1.6; }
+.rule-text strong { color:#1a1a2e; }
+.p2-note {
+  font-size:13px;color:#8888aa;line-height:1.6;
+  padding:12px 16px;
+  background:rgba(255,255,255,.5);
+  border-left:3px solid rgba(59,91,219,.3);
+  border-radius:0 8px 8px 0;
+}
+.p2-vis { width:340px;flex-shrink:0; }
+
+/* fake loading screen */
+.fake-screen {
+  width:100%;aspect-ratio:16/10;
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.15);
+  position:relative;
+  background: linear-gradient(135deg,#a8d8f0 0%,#90c8e8 40%,#a0d4c0 100%);
+}
+.fake-screen-blur {
+  position:absolute;inset:0;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(2px);
+}
+.fake-loading {
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.fake-spinner {
+  width:36px;height:36px;
+  border:3px solid rgba(255,255,255,.35);
+  border-top-color:rgba(255,255,255,.9);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.screen-caption {
+  margin-top:10px;font-size:12px;color:#7070a0;text-align:center;line-height:1.5;
+}
+
+/* circle diagram */
+.circle-diag {
+  margin-top:16px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;height:120px;
+}
+.c-outer {
+  width:110px;height:110px;border-radius:50%;
+  border:2px solid rgba(255,69,58,.45);
+  background:rgba(255,69,58,.08);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.c-inner {
+  width:64px;height:64px;border-radius:50%;
+  border:2px solid rgba(52,199,89,.6);
+  background:rgba(52,199,89,.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+}
+.c-label-out {
+  position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  font-size:11px;font-weight:600;color:rgba(255,69,58,.8);white-space:nowrap;
+}
+.c-label-in {
+  position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+  font-size:11px;font-weight:600;color:rgba(52,199,89,.8);white-space:nowrap;
+}
+
+/* ============================================
+   PAGE 3: MEETING SHARE
+   ============================================ */
+.p3-body { display:flex;gap:48px;align-items:flex-start;width:100%; }
+.p3-text { flex:1; }
+.p3-vis { width:340px;flex-shrink:0; }
+
+/* ============================================
+   PAGE 4: MENUBAR
+   ============================================ */
+.p4-body { display:flex;flex-direction:column;align-items:center;gap:32px;width:100%;text-align:center; }
+.p4-lead { font-size:16px;color:#3a3a5a;line-height:1.8;max-width:560px; }
+.p4-lead strong { color:#1a1a2e; }
+
+/* fake menubar screenshot */
+.menubar-wrap {
+  position:relative;width:560px;
+}
+.menubar-arrow {
+  display:flex;flex-direction:column;align-items:center;margin-bottom:6px;
+  color:#8080b0;font-size:13px;gap:2px;
+}
+.arrow-down { font-size:18px;animation:arrowBob .8s ease-in-out infinite; }
+@keyframes arrowBob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.menubar-img {
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.1);
+}
+.mb-bar {
+  background:#2a2a4a;height:36px;
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:0 16px;gap:8px;
+}
+.mb-icon { font-size:14px;opacity:.8; }
+.mb-time { font-size:12px;color:rgba(255,255,255,.7);margin-left:8px; }
+.mb-menu {
+  background:rgba(38,38,60,.95);
+  backdrop-filter:blur(20px);
+  border-radius:10px;
+  overflow:hidden;
+  width:200px;
+  margin:8px auto;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.mb-item {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;font-size:13px;color:rgba(255,255,255,.85);
+  transition:background .15s;
+}
+.mb-item:first-child { border-bottom:1px solid rgba(255,255,255,.08); }
+.mb-item:hover { background:rgba(255,255,255,.1); }
+.mb-item span { display:flex;align-items:center;gap:8px; }
+.mb-kbd { font-size:11px;color:rgba(255,255,255,.4); }
+
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<!-- PROGRESS DOTS -->
+<div class="progress-dots">
+  <div class="dot active" id="d0"></div>
+  <div class="dot" id="d1"></div>
+  <div class="dot" id="d2"></div>
+  <div class="dot" id="d3"></div>
+</div>
+
+<div class="pages">
+
+  <!-- ==================== PAGE 1 ==================== -->
+  <div class="page active" id="page-0">
+    <div class="page-title">
+      <span class="star">🛡️</span>
+      <h1>Dam 如何保护你的隐私</h1>
+    </div>
+
+    <div class="content">
+      <div class="flow-grid">
+
+        <!-- TRIGGERS -->
+        <div class="col-triggers">
+          <div class="f-card">
+            <div class="f-card-illo illo-meet">
+              <div class="meet-win">
+                <div class="meet-bar">
+                  <div class="meet-dot" style="background:#ff5f57"></div>
+                  <div class="meet-dot" style="background:#febc2e"></div>
+                  <div class="meet-dot" style="background:#28c840"></div>
+                </div>
+                <div class="meet-grid">
+                  <div class="meet-face" style="background:#2a2a4a">🧑</div>
+                  <div class="meet-face" style="background:#1e2040">👩</div>
+                  <div class="meet-face" style="background:#252545">🧑‍💻</div>
+                  <div class="meet-face" style="background:#1a1a38">👨</div>
+                </div>
+                <div class="rec-pill">● REC</div>
+              </div>
+            </div>
+            <div class="f-card-label">会议屏幕共享</div>
+          </div>
+
+          <div class="f-card">
+            <div class="f-card-illo illo-disp">
+              <div class="disp-setup">
+                <div class="laptop-s">
+                  <div class="laptop-s-scr">💻</div>
+                  <div class="laptop-s-base"></div>
+                </div>
+                <div class="conn-arr">→</div>
+                <div class="mon-s">🖥️</div>
+              </div>
+            </div>
+            <div class="f-card-label">连接公开显示器</div>
+          </div>
+        </div>
+
+        <!-- ARROW LEFT -->
+        <div class="col-arrow">
+          <svg class="arrow-svg" width="56" height="200" viewBox="0 0 56 200">
+            <path class="a-path" d="M8,60 Q44,60 44,100"/>
+            <polygon class="a-head" points="40,92 48,92 44,103"/>
+            <path class="a-path" d="M8,140 Q44,140 44,100" style="animation-delay:.4s"/>
+            <polygon class="a-head" points="40,97 48,97 44,88" transform="rotate(180 44 100)"/>
+          </svg>
+        </div>
+
+        <!-- DAM CENTER -->
+        <div style="display:flex;justify-content:center">
+          <div class="dam-center">
+            <div style="position:relative">
+              <div class="dam-ring"></div>
+              <div class="dam-ring"></div>
+              <div class="dam-ring"></div>
+              <div class="dam-icon-box">🌊</div>
+            </div>
+            <div class="dam-info">
+              <strong>后台实时监测</strong>
+              <small>绝大多数时间<br>CPU 占用低于 0.1%</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- ARROW RIGHT -->
+        <div class="col-arrow">
+          <svg class="arrow-svg" width="56" height="280" viewBox="0 0 56 280">
+            <path class="a-path" d="M8,140 Q8,55 48,44"/>
+            <polygon class="a-head" points="40,41 50,41 48,53"/>
+            <path class="a-path" d="M8,140 L48,140" style="animation-delay:.25s"/>
+            <polygon class="a-head" points="42,136 52,140 42,144"/>
+            <path class="a-path" d="M8,140 Q8,225 48,236" style="animation-delay:.5s"/>
+            <polygon class="a-head" points="40,229 50,229 48,241" transform="rotate(180 48 235)"/>
+          </svg>
+        </div>
+
+        <!-- EFFECTS -->
+        <div class="col-effects">
+          <div class="f-card">
+            <div class="f-card-illo illo-close">
+              <div class="apps-row">
+                <div class="app-i" style="background:#dcefff">💬</div>
+                <div class="app-i" style="background:#fff0dc">🏦</div>
+                <div class="app-i" style="background:#ffeaea">📧</div>
+              </div>
+            </div>
+            <div class="f-card-label">关闭 / 最小化隐私 App</div>
+          </div>
+
+          <div class="f-card">
+            <div class="f-card-illo illo-fold">
+              <div class="fold-row">
+                <div class="fold-item"><span>📁</span><span class="fold-name">工作</span></div>
+                <div class="fold-item h"><span>📁</span><span class="fold-name">私人</span></div>
+                <div class="fold-item h"><span>📁</span><span class="fold-name">财务</span></div>
+                <div class="fold-item"><span>📁</span><span class="fold-name">项目</span></div>
+              </div>
+            </div>
+            <div class="f-card-label">隐藏私密文件夹</div>
+          </div>
+
+          <div class="f-card">
+            <div class="f-card-illo illo-brow">
+              <div class="brow-win">
+                <div class="brow-tabs">
+                  <div class="b-tab">📊 工作文档</div>
+                  <div class="b-tab ht">🏦 银行</div>
+                  <div class="b-tab ht">📧 邮件</div>
+                </div>
+                <div class="brow-url"><div class="url-bar">https://work.example.com</div></div>
+                <div class="brow-body">
+                  <div class="b-line" style="width:75%"></div>
+                  <div class="b-line" style="width:55%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="f-card-label">隐藏浏览器隐私标签页</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="btn-primary" onclick="goTo(1)">下一步</button>
+      <button class="btn-skip" onclick="goTo(3)">结束指引</button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 2 ==================== -->
+  <div class="page" id="page-1">
+    <div class="page-title">
+      <span class="star">🖥️</span>
+      <h1>将显示器标记为「公开」或「私人」</h1>
+    </div>
+
+    <div class="content">
+      <div class="p2-body">
+        <div class="p2-text">
+          <p class="lead">
+            每次接入<strong>新的有线屏幕或 AirPlay 设备</strong>时，Dam 会在所有外部屏幕上显示一个<strong>假的加载中页面</strong>——对观众来说，这看起来像是系统正在准备共享，完全不会察觉你正在做隐私保护。
+          </p>
+
+          <div class="p2-rules">
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#ff453a"></div>
+              <div class="rule-text"><strong>点击圆圈外部</strong> — 当前是公开环境，Dam 立即触发隐私保护</div>
+            </div>
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#34c759"></div>
+              <div class="rule-text"><strong>点击圆圈内部</strong> — 当前是私人环境，保持原样，不做任何处理</div>
+            </div>
+          </div>
+
+          <div class="p2-note">
+            每台显示器只需标记一次——Dam 通过硬件 ID 记住你的选择，下次接入同一屏幕自动执行，无需再次确认。你可以随时在设置中修改。
+          </div>
+        </div>
+
+        <div class="p2-vis">
+          <div class="fake-screen">
+            <div class="fake-screen-blur"></div>
+            <div class="fake-loading">
+              <div class="fake-spinner"></div>
+            </div>
+          </div>
+          <p class="screen-caption">观众看到的是「系统准备中」，而非隐私保护操作</p>
+
+          <div class="circle-diag">
+            <div class="c-outer">
+              <div class="c-label-out">点击圆圈外 → 公开</div>
+              <div class="c-inner">
+                🛡️
+                <div class="c-label-in">点击圆圈内 → 私人</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="btn-primary" onclick="goTo(2)">下一步</button>
+      <button class="btn-skip" onclick="goTo(3)">结束指引</button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 3 ==================== -->
+  <div class="page" id="page-2">
+    <div class="page-title">
+      <span class="star">📹</span>
+      <h1>会议共享 / 录制屏幕</h1>
+    </div>
+
+    <div class="content">
+      <div class="p3-body">
+        <div class="p3-text">
+          <p class="lead">
+            使用 Zoom、Teams 等软件<strong>共享或录制屏幕</strong>时，Dam 同样会先显示假的加载页面争取时间，由你决定是否启动隐私保护。
+          </p>
+
+          <div class="p2-rules" style="margin-bottom:20px">
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#ff453a"></div>
+              <div class="rule-text"><strong>点击圆圈外部</strong> — 当前是公开展示，本次共享将触发隐私保护</div>
+            </div>
+            <div class="rule-item">
+              <div class="rule-dot" style="background:#34c759"></div>
+              <div class="rule-text"><strong>点击圆圈内部</strong> — 当前不是公开展示，本次共享不做任何处理</div>
+            </div>
+          </div>
+
+          <div class="p2-note">
+            与显示器标记不同，会议场景<strong>每次都会询问</strong>——因为同一软件可能用于私人或公开会议，Dam 不做假设，由你实时决定。
+          </div>
+        </div>
+
+        <div class="p3-vis">
+          <div class="fake-screen">
+            <div class="fake-screen-blur"></div>
+            <div class="fake-loading">
+              <div class="fake-spinner"></div>
+            </div>
+          </div>
+          <p class="screen-caption">共享屏幕时，观众先看到加载页面，你有时间做出选择</p>
+
+          <div class="circle-diag">
+            <div class="c-outer">
+              <div class="c-label-out">点击圆圈外 → 公开展示</div>
+              <div class="c-inner">
+                🛡️
+                <div class="c-label-in">点击圆圈内 → 私人会议</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="btn-primary" onclick="goTo(3)">下一步</button>
+      <button class="btn-skip" onclick="goTo(3)">结束指引</button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 4 ==================== -->
+  <div class="page" id="page-3">
+    <div class="page-title">
+      <span class="star">⚙️</span>
+      <h1>随时调整你的设置</h1>
+    </div>
+
+    <div class="content">
+      <div class="p4-body">
+        <p class="p4-lead">
+          Dam 默认<strong>安静运行在菜单栏</strong>，不打扰你的日常工作。<br>
+          需要修改保护规则或查看屏幕记录时，点击菜单栏图标即可。
+        </p>
+
+        <div class="menubar-wrap">
+          <div class="menubar-arrow">
+            <span>点击这里打开设置</span>
+            <span class="arrow-down">↓</span>
+          </div>
+          <div class="menubar-img">
+            <div class="mb-bar">
+              <span class="mb-icon">📶</span>
+              <span class="mb-icon">🔋</span>
+              <span class="mb-icon">⌨️</span>
+              <span class="mb-icon">🌊</span>
+              <span class="mb-icon">🔍</span>
+              <span class="mb-time">3月11日 周三 18:32</span>
+            </div>
+            <div style="display:flex;justify-content:flex-end;padding:0 48px 12px">
+              <div class="mb-menu">
+                <div class="mb-item">
+                  <span>⚙️ 设置…</span>
+                  <span class="mb-kbd">⌘,</span>
+                </div>
+                <div class="mb-item">
+                  <span>⏹ 退出 Dam</span>
+                  <span class="mb-kbd">⌘Q</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size:13px;color:#9090b0;max-width:420px;text-align:center;line-height:1.7">
+          在设置中，你可以管理受保护的 App 列表、修改显示器标记、自定义快捷键，以及切换保护模式。
+        </p>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="btn-primary" onclick="finish()">完成</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let current = 0;
+
+function goTo(n) {
+  const prev = document.getElementById('page-' + current);
+  prev.classList.remove('active');
+  prev.classList.add('exit');
+  setTimeout(() => prev.classList.remove('exit'), 500);
+
+  current = n;
+  const next = document.getElementById('page-' + current);
+  next.classList.add('active');
+
+  // update dots
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+}
+
+function finish() {
+  // In app: window.webkit.messageHandlers.onboardingDone.postMessage({})
+  // For web preview: just fade out
+  document.body.style.transition = 'opacity .4s';
+  document.body.style.opacity = '0';
+  setTimeout(() => {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:-apple-system,sans-serif;color:#555;font-size:16px">引导已完成</div>';
+    document.body.style.opacity = '1';
+  }, 400);
+}
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && current < 3) goTo(current + 1);
+  if (e.key === 'ArrowLeft' && current > 0) goTo(current - 1);
+});
+</script>
+</body>
+</html>
