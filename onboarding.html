@@ -475,9 +475,11 @@ body {
 /* ============================================
    PAGE 3: MEETING SHARE
    ============================================ */
-.p3-body { display:flex;gap:48px;align-items:center;width:100%; }
-.p3-text { flex:1; }
-.p3-vis { width:340px;flex-shrink:0; }
+.p3-body { display:flex;flex-direction:column;align-items:center;gap:28px;width:100%; }
+.p3-text { width:100%;max-width:600px; }
+.p3-text .lead { font-size:15px;color:#3a3a5a;line-height:1.8;margin-bottom:20px;text-align:center; }
+.p3-text .lead strong { color:#1a1a2e; }
+.p3-vis { width:460px;flex-shrink:0; }
 
 /* ============================================
    PAGE 4: MENUBAR
@@ -794,12 +796,22 @@ body {
 
     <div class="content">
       <div class="p3-body">
+        <div class="p3-vis">
+          <div class="fake-screen">
+            <div class="fake-screen-blur"></div>
+            <div class="fake-loading">
+              <div class="fake-spinner"></div>
+            </div>
+          </div>
+          <p class="screen-caption">共享屏幕时，观众先看到加载页面，你有时间做出选择</p>
+        </div>
+
         <div class="p3-text">
           <p class="lead">
             使用 Zoom、Teams 等软件<strong>共享或录制屏幕</strong>时，Dam 同样会先显示假的加载页面争取时间，由你决定是否启动隐私保护。
           </p>
 
-          <div class="p2-rules" style="margin-bottom:20px">
+          <div class="p2-rules" style="margin-bottom:16px">
             <div class="rule-item">
               <div class="rule-dot" style="background:#ff453a"></div>
               <div class="rule-text"><strong>点击圆圈外部</strong> — 当前是公开展示，本次共享将触发隐私保护</div>
@@ -812,26 +824,6 @@ body {
 
           <div class="p2-note">
             与显示器标记不同，会议场景<strong>每次都会询问</strong>——因为同一软件可能用于私人或公开会议，Dam 不做假设，由你实时决定。
-          </div>
-        </div>
-
-        <div class="p3-vis">
-          <div class="fake-screen">
-            <div class="fake-screen-blur"></div>
-            <div class="fake-loading">
-              <div class="fake-spinner"></div>
-            </div>
-          </div>
-          <p class="screen-caption">共享屏幕时，观众先看到加载页面，你有时间做出选择</p>
-
-          <div class="circle-diag">
-            <div class="c-outer">
-              <div class="c-label-out">点击圆圈外 → 公开展示</div>
-              <div class="c-inner">
-                🛡️
-                <div class="c-label-in">点击圆圈内 → 私人会议</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
