@@ -499,38 +499,50 @@ body {
 .arrow-down { font-size:18px;animation:arrowBob .8s ease-in-out infinite; }
 @keyframes arrowBob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 .menubar-img {
-  background:rgba(255,255,255,.75);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,.9);
+  background: linear-gradient(180deg,#5a8fc0 0%,#4a7eb0 100%);
   border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 8px 32px rgba(0,0,0,.1);
+  overflow:visible;
+  box-shadow:0 8px 32px rgba(0,0,0,.15);
+  position:relative;
+  padding-bottom: 16px;
 }
 .mb-bar {
-  background:#2a2a4a;height:36px;
+  height:28px;
   display:flex;align-items:center;justify-content:flex-end;
-  padding:0 16px;gap:8px;
-}
-.mb-icon { font-size:14px;opacity:.8; }
-.mb-time { font-size:12px;color:rgba(255,255,255,.7);margin-left:8px; }
-.mb-menu {
-  background:rgba(38,38,60,.95);
+  padding:0 14px;gap:6px;
+  background:rgba(255,255,255,.12);
   backdrop-filter:blur(20px);
+  border-radius:14px 14px 0 0;
+}
+.mb-dam-icon {
+  width:20px;height:20px;margin-right:2px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(80,140,220,.9);
+  border-radius:5px;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.mb-dam-icon svg { width:13px;height:13px; }
+.mb-sys-icon { font-size:13px;opacity:.85;line-height:1; }
+.mb-time { font-size:12px;color:rgba(255,255,255,.9);margin-left:4px;font-weight:500;white-space:nowrap; }
+.mb-menu {
+  background:rgba(245,245,250,.96);
+  backdrop-filter:blur(40px);
   border-radius:10px;
   overflow:hidden;
-  width:200px;
-  margin:8px auto;
-  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  width:196px;
+  margin: 4px 14px 0 auto;
+  box-shadow:0 4px 24px rgba(0,0,0,.18), 0 0 0 0.5px rgba(0,0,0,.08);
 }
 .mb-item {
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 14px;font-size:13px;color:rgba(255,255,255,.85);
-  transition:background .15s;
+  padding:9px 14px;font-size:13px;color:#1a1a1a;
+  transition:background .1s;
+  gap:8px;
 }
-.mb-item:first-child { border-bottom:1px solid rgba(255,255,255,.08); }
-.mb-item:hover { background:rgba(255,255,255,.1); }
-.mb-item span { display:flex;align-items:center;gap:8px; }
-.mb-kbd { font-size:11px;color:rgba(255,255,255,.4); }
+.mb-item:first-child { border-bottom:1px solid rgba(0,0,0,.06); }
+.mb-item-left { display:flex;align-items:center;gap:8px; }
+.mb-item-icon { width:16px;height:16px;display:flex;align-items:center;justify-content:center;opacity:.7;flex-shrink:0; }
+.mb-kbd { font-size:12px;color:rgba(0,0,0,.35);letter-spacing:.5px; }
 
 </style>
 </head>
@@ -856,23 +868,38 @@ body {
           </div>
           <div class="menubar-img">
             <div class="mb-bar">
-              <span class="mb-icon">📶</span>
-              <span class="mb-icon">🔋</span>
-              <span class="mb-icon">⌨️</span>
-              <span class="mb-icon">🌊</span>
-              <span class="mb-icon">🔍</span>
-              <span class="mb-time">3月11日 周三 18:32</span>
+              <!-- Dam icon (highlighted/active) -->
+              <div class="mb-dam-icon">
+                <svg viewBox="0 0 13 13" fill="none">
+                  <path d="M6.5 1.5 C5 1.5 3.5 2.8 3.5 4.5 L3.5 6 C3 6.2 2.5 6.7 2.5 7.5 L2.5 10 C2.5 10.6 3 11 3.5 11 L9.5 11 C10 11 10.5 10.6 10.5 10 L10.5 7.5 C10.5 6.7 10 6.2 9.5 6 L9.5 4.5 C9.5 2.8 8 1.5 6.5 1.5Z" fill="white" opacity="0.9"/>
+                  <rect x="5.5" y="6" width="2" height="3.5" rx="1" fill="rgba(80,140,220,0.8)"/>
+                </svg>
+              </div>
+              <!-- System icons -->
+              <span class="mb-sys-icon">🔋</span>
+              <span class="mb-sys-icon" style="font-size:11px;opacity:.7">⬜</span>
+              <span class="mb-sys-icon">🔴</span>
+              <span class="mb-sys-icon" style="font-size:10px;opacity:.6">⬛</span>
+              <span class="mb-time">3月11日 周三 21:59</span>
             </div>
-            <div style="display:flex;justify-content:flex-end;padding:0 48px 12px">
-              <div class="mb-menu">
-                <div class="mb-item">
-                  <span>⚙️ 设置…</span>
-                  <span class="mb-kbd">⌘,</span>
+            <div class="mb-menu">
+              <div class="mb-item">
+                <div class="mb-item-left">
+                  <div class="mb-item-icon">
+                    <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#555" stroke-width="1.5"/><circle cx="8" cy="8" r="2.5" fill="#555"/></svg>
+                  </div>
+                  <span>设置…</span>
                 </div>
-                <div class="mb-item">
-                  <span>⏹ 退出 Dam</span>
-                  <span class="mb-kbd">⌘Q</span>
+                <span class="mb-kbd">⌘ ,</span>
+              </div>
+              <div class="mb-item">
+                <div class="mb-item-left">
+                  <div class="mb-item-icon">
+                    <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#555" stroke-width="1.5"/><line x1="5" y1="5" x2="11" y2="11" stroke="#555" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="5" x2="5" y2="11" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </div>
+                  <span>退出 Dam</span>
                 </div>
+                <span class="mb-kbd">⌘ Q</span>
               </div>
             </div>
           </div>
