@@ -328,42 +328,41 @@ body {
   opacity:.8;
 }
 
-/* illo: close apps — windows view */
-.illo-close { background:linear-gradient(135deg,#f0e8ff,#e4d8ff); }
-.win-scene {
-  display:flex; gap:6px; align-items:flex-end;
+/* illo: close apps — macOS dock icons */
+.illo-close { background:linear-gradient(135deg,#ede8ff,#ddd4ff); }
+.app-icons-row {
+  display:flex; gap:14px; align-items:center; justify-content:center;
 }
-.mini-win {
-  border-radius:7px; overflow:hidden;
-  box-shadow:0 3px 10px rgba(0,0,0,.15);
-  flex-shrink:0; position:relative;
+.app-icon {
+  width:52px; height:52px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
 }
-.mini-win-bar {
-  height:14px; display:flex; align-items:center; padding:0 6px; gap:3px;
+.app-icon.priv-icon {
+  animation: iconClose 3s ease-in-out infinite;
 }
-.mini-win-dot { width:5px;height:5px;border-radius:50%; }
-.mini-win-body { padding:5px 6px; display:flex;flex-direction:column;gap:3px; }
-.mini-win-line { height:4px; border-radius:2px; background:rgba(255,255,255,.5); }
-
-/* privacy windows animate away */
-.mini-win.priv {
-  animation: winClose 3s ease-in-out infinite;
-}
-.mini-win.priv:nth-child(2) { animation-delay: .5s; }
-@keyframes winClose {
+.app-icon.priv-icon:nth-child(2) { animation-delay:.5s; }
+@keyframes iconClose {
   0%,40%  { opacity:1; transform:scale(1) translateY(0); }
-  60%,80% { opacity:0; transform:scale(.7) translateY(10px); }
+  60%,80% { opacity:0; transform:scale(.75) translateY(8px); }
   100%    { opacity:1; transform:scale(1) translateY(0); }
 }
-/* work window stays, pulses slightly */
-.mini-win.work {
-  animation: winPulse 3s ease-in-out infinite;
+/* WeChat icon */
+.icon-wechat {
+  background:linear-gradient(145deg,#2dc100,#1e9800);
 }
-@keyframes winPulse {
-  0%,40%{ box-shadow:0 3px 10px rgba(0,0,0,.15); }
-  65%,80%{ box-shadow:0 4px 18px rgba(80,100,255,.35); }
-  100%{ box-shadow:0 3px 10px rgba(0,0,0,.15); }
+.icon-wechat svg { width:30px; height:30px; }
+/* Album/Photos icon */
+.icon-photo {
+  background:linear-gradient(145deg,#1a1a2e,#252545);
 }
+.icon-photo svg { width:28px; height:28px; }
+/* Bank icon */
+.icon-bank {
+  background:linear-gradient(145deg,#1040b0,#0d33a0);
+}
+.icon-bank svg { width:28px; height:28px; }
 
 /* illo: folders */
 .illo-fold { background:linear-gradient(135deg,#e8f5e0,#d8f0cc); }
@@ -653,44 +652,45 @@ body {
         <div class="col-effects" id="colEffects">
           <div class="f-card">
             <div class="f-card-illo illo-close">
-              <div class="win-scene">
-                <!-- Privacy window 1: WeChat -->
-                <div class="mini-win priv" style="width:58px;background:#1aba1a">
-                  <div class="mini-win-bar" style="background:#18a018">
-                    <div class="mini-win-dot" style="background:#ff5f57"></div>
-                    <div class="mini-win-dot" style="background:#febc2e"></div>
-                  </div>
-                  <div class="mini-win-body">
-                    <div style="font-size:16px;text-align:center">💬</div>
-                    <div class="mini-win-line" style="width:70%"></div>
-                    <div class="mini-win-line" style="width:50%"></div>
-                  </div>
+              <div class="app-icons-row">
+                <!-- WeChat -->
+                <div class="app-icon icon-wechat priv-icon">
+                  <svg viewBox="0 0 30 30" fill="none">
+                    <ellipse cx="10" cy="13" rx="8" ry="6" fill="white" opacity="0.95"/>
+                    <circle cx="7.5" cy="12.5" r="1.5" fill="#2dc100"/>
+                    <circle cx="11" cy="12.5" r="1.5" fill="#2dc100"/>
+                    <path d="M10 19 L8 22 L14 20" fill="white" opacity="0.95"/>
+                    <ellipse cx="20" cy="17" rx="6.5" ry="5" fill="white" opacity="0.75"/>
+                    <circle cx="18" cy="17" r="1.2" fill="#2dc100"/>
+                    <circle cx="21" cy="17" r="1.2" fill="#2dc100"/>
+                  </svg>
                 </div>
-                <!-- Work window: stays -->
-                <div class="mini-win work" style="width:70px;background:#2a2a4a">
-                  <div class="mini-win-bar" style="background:#1e1e38">
-                    <div class="mini-win-dot" style="background:#ff5f57"></div>
-                    <div class="mini-win-dot" style="background:#febc2e"></div>
-                    <div class="mini-win-dot" style="background:#28c840"></div>
-                  </div>
-                  <div class="mini-win-body">
-                    <div style="font-size:16px;text-align:center">📊</div>
-                    <div class="mini-win-line"></div>
-                    <div class="mini-win-line" style="width:60%"></div>
-                    <div class="mini-win-line" style="width:80%"></div>
-                  </div>
+                <!-- Photos -->
+                <div class="app-icon icon-photo" style="animation:iconClose 3s ease-in-out 0.8s infinite">
+                  <svg viewBox="0 0 28 28" fill="none">
+                    <circle cx="14" cy="14" r="6" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                    <line x1="14" y1="4" x2="14" y2="8" stroke="#ff453a" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="14" y1="20" x2="14" y2="24" stroke="#30d158" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="4" y1="14" x2="8" y2="14" stroke="#ff9f0a" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="20" y1="14" x2="24" y2="14" stroke="#0a84ff" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="7.5" y1="7.5" x2="10.3" y2="10.3" stroke="#ff375f" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="17.7" y1="17.7" x2="20.5" y2="20.5" stroke="#34c759" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="7.5" y1="20.5" x2="10.3" y2="17.7" stroke="#ff9f0a" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="17.7" y1="10.3" x2="20.5" y2="7.5" stroke="#64d2ff" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="14" cy="14" r="3.5" fill="white" opacity="0.9"/>
+                  </svg>
                 </div>
-                <!-- Privacy window 2: Bank -->
-                <div class="mini-win priv" style="width:58px;background:#1a4aa0">
-                  <div class="mini-win-bar" style="background:#153d88">
-                    <div class="mini-win-dot" style="background:#ff5f57"></div>
-                    <div class="mini-win-dot" style="background:#febc2e"></div>
-                  </div>
-                  <div class="mini-win-body">
-                    <div style="font-size:16px;text-align:center">🏦</div>
-                    <div class="mini-win-line" style="width:75%"></div>
-                    <div class="mini-win-line" style="width:45%"></div>
-                  </div>
+                <!-- Bank -->
+                <div class="app-icon icon-bank priv-icon" style="animation-delay:0.3s">
+                  <svg viewBox="0 0 28 28" fill="none">
+                    <rect x="4" y="13" width="20" height="10" rx="1.5" fill="white" opacity="0.9"/>
+                    <rect x="6" y="15" width="3" height="6" rx="1" fill="#1040b0"/>
+                    <rect x="10.5" y="15" width="3" height="6" rx="1" fill="#1040b0"/>
+                    <rect x="15" y="15" width="3" height="6" rx="1" fill="#1040b0"/>
+                    <rect x="19" y="15" width="3" height="6" rx="1" fill="#1040b0"/>
+                    <polygon points="14,4 4,12 24,12" fill="white" opacity="0.9"/>
+                    <rect x="4" y="22" width="20" height="2" rx="1" fill="white" opacity="0.9"/>
+                  </svg>
                 </div>
               </div>
             </div>
