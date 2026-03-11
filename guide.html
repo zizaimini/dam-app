@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dam 使用指南</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --card: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --accent: #7c6bff;
+    --accent2: #ff6b9d;
+    --accent3: #4ecdc4;
+    --safe: #34c759;
+    --public: #ff453a;
+    --text: #f0f0f5;
+    --muted: rgba(240,240,245,0.5);
+    --glass: rgba(255,255,255,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 60px;
+  }
+  .nav-logo { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 14px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* PROGRESS BAR */
+  #progress {
+    position: fixed; top: 60px; left: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 99; transition: width 0.1s;
+    width: 0%;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 80px 40px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 800px 500px at 50% 40%, rgba(124,107,255,0.12) 0%, transparent 70%);
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(124,107,255,0.15); border: 1px solid rgba(124,107,255,0.3);
+    border-radius: 100px; padding: 6px 16px; font-size: 13px;
+    color: var(--accent); margin-bottom: 32px;
+  }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  .hero h1 {
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 800; letter-spacing: -2px;
+    line-height: 1.1; margin-bottom: 20px;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 18px; color: var(--muted); max-width: 560px;
+    margin-bottom: 48px;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 13px;
+  }
+  .scroll-arrow {
+    width: 24px; height: 24px;
+    border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+    transform: rotate(45deg); animation: bounce 2s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(6px)} }
+
+  /* SECTIONS */
+  section {
+    padding: 100px 40px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .section-label {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .section-label::before {
+    content: ''; width: 24px; height: 2px; background: var(--accent);
+  }
+  h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800; letter-spacing: -1px;
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .section-desc {
+    font-size: 17px; color: var(--muted);
+    max-width: 600px; margin-bottom: 56px;
+  }
+
+  /* FADE IN */
+  .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s, transform 0.6s; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ============================================
+     SECTION 1: TRIGGER SCENARIOS
+  ============================================ */
+  .triggers-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media(max-width:700px){ .triggers-grid{ grid-template-columns:1fr; } }
+
+  .trigger-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 32px;
+    position: relative; overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .trigger-card:hover { transform: translateY(-4px); border-color: rgba(124,107,255,0.4); }
+  .trigger-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+  .trigger-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 20px;
+    background: rgba(124,107,255,0.15);
+  }
+  .trigger-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .trigger-card p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+  .trigger-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(52,199,89,0.15); border: 1px solid rgba(52,199,89,0.3);
+    border-radius: 100px; padding: 4px 12px;
+    font-size: 12px; color: var(--safe);
+    margin-top: 16px;
+  }
+  .trigger-badge::before { content:'●'; font-size:8px; }
+
+  /* ============================================
+     SECTION 2: SCREEN OVERLAY DEMO
+  ============================================ */
+  .overlay-demo {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 24px; overflow: hidden;
+    position: relative;
+  }
+  .overlay-demo-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--muted);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .overlay-screen {
+    position: relative;
+    background: linear-gradient(135deg, #0d0d1a 0%, #1a1030 100%);
+    min-height: 420px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* fake background content */
+  .fake-bg { position: absolute; inset: 0; opacity: 0.3; }
+  .fake-bar { height: 40px; background: rgba(255,255,255,0.05); }
+  .fake-content { padding: 20px; display: flex; gap: 16px; }
+  .fake-sidebar { width: 160px; background: rgba(255,255,255,0.03); border-radius: 8px; height: 280px; }
+  .fake-main { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .fake-card-sm { height: 60px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+  .fake-card-lg { flex: 1; background: rgba(255,255,255,0.03); border-radius: 8px; }
+
+  /* glass overlay */
+  .dam-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.4s;
+  }
+
+  .dam-circle-wrap {
+    position: relative;
+    width: 280px; height: 280px;
+  }
+
+  /* outer ring - public zone */
+  .dam-ring-outer {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255,69,58,0.4);
+    background: rgba(255,69,58,0.08);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .dam-ring-outer.hovered-public {
+    background: rgba(255,69,58,0.25);
+    border-color: rgba(255,69,58,0.8);
+  }
+  .dam-ring-outer .zone-label-outer {
+    position: absolute; bottom: -32px; left: 50%; transform: translateX(-50%);
+    font-size: 13px; color: rgba(255,69,58,0.8); white-space: nowrap;
+    font-weight: 600;
+  }
+
+  /* inner circle - safe zone */
+  .dam-ring-inner {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 2px solid rgba(52,199,89,0.5);
+    background: rgba(52,199,89,0.1);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 6px;
+    transition: background 0.3s, border-color 0.3s;
+    position: relative; z-index: 2;
+  }
+  .dam-ring-inner.hovered-safe {
+    background: rgba(52,199,89,0.25);
+    border-color: rgba(52,199,89,0.9);
+  }
+  .dam-ring-inner .dam-icon { font-size: 28px; }
+  .dam-ring-inner .dam-text { font-size: 13px; font-weight: 600; color: rgba(52,199,89,0.9); }
+  .dam-ring-inner .zone-label-inner {
+    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: rgba(52,199,89,0.7); white-space: nowrap; font-weight: 600;
+  }
+
+  /* click ripple */
+  .ripple {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    width: 0; height: 0;
+    transform: translate(-50%, -50%);
+    animation: ripple-anim 0.6s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes ripple-anim {
+    to { width: 200px; height: 200px; opacity: 0; }
+  }
+
+  /* result toast */
+  .overlay-result {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(20px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .overlay-result.show { opacity: 1; pointer-events: all; }
+  .result-icon { font-size: 56px; }
+  .result-text { font-size: 22px; font-weight: 700; }
+  .result-desc { color: var(--muted); font-size: 15px; text-align: center; max-width: 320px; }
+  .result-reset {
+    margin-top: 12px;
+    background: var(--glass); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 24px;
+    font-size: 14px; color: var(--muted); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .result-reset:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+  .overlay-hint {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    font-size: 13px; color: rgba(255,255,255,0.4); white-space: nowrap;
+  }
+
+  /* instruction labels */
+  .overlay-instructions {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; padding: 24px 28px;
+    border-top: 1px solid var(--border);
+  }
+  .instr-item {
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .instr-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    margin-top: 5px; flex-shrink: 0;
+  }
+  .instr-item p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .instr-item strong { color: var(--text); }
+
+  /* ============================================
+     SECTION 3: MEETING RECORDING
+  ============================================ */
+  .meeting-demo {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 24px; overflow: hidden;
+  }
+  .meeting-header {
+    padding: 20px 28px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .meeting-header-left { display: flex; align-items: center; gap: 10px; }
+  .rec-indicator {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,69,58,0.15); border: 1px solid rgba(255,69,58,0.4);
+    border-radius: 100px; padding: 4px 12px; font-size: 12px; color: #ff453a;
+  }
+  .rec-dot { width: 6px; height: 6px; border-radius: 50%; background: #ff453a; animation: pulse 1s infinite; }
+
+  .meeting-stages {
+    display: flex;
+  }
+  .stage-nav {
+    width: 200px; border-right: 1px solid var(--border);
+    padding: 20px 0; flex-shrink: 0;
+  }
+  .stage-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 20px; cursor: pointer;
+    transition: background 0.2s; font-size: 14px;
+    color: var(--muted); border: none; background: none;
+    width: 100%; text-align: left;
+  }
+  .stage-btn:hover { background: rgba(255,255,255,0.04); }
+  .stage-btn.active { background: rgba(124,107,255,0.1); color: var(--text); }
+  .stage-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0;
+  }
+  .stage-btn.active .stage-num { background: var(--accent); }
+
+  .stage-content { flex: 1; padding: 32px; min-height: 380px; }
+  .stage-panel { display: none; }
+  .stage-panel.active { display: block; }
+
+  .meeting-modal {
+    background: rgba(28,28,36,0.95);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 32px;
+    max-width: 380px; margin: 0 auto;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  }
+  .meeting-modal-icon { font-size: 40px; margin-bottom: 16px; text-align: center; }
+  .meeting-modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .meeting-modal p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+  .meeting-modal-btns { display: flex; gap: 10px; }
+  .btn-safe, .btn-public {
+    flex: 1; padding: 12px; border-radius: 12px; border: none;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-safe { background: rgba(52,199,89,0.15); color: var(--safe); border: 1px solid rgba(52,199,89,0.4); }
+  .btn-safe:hover { background: rgba(52,199,89,0.25); }
+  .btn-public { background: rgba(255,69,58,0.15); color: #ff453a; border: 1px solid rgba(255,69,58,0.4); }
+  .btn-public:hover { background: rgba(255,69,58,0.25); }
+
+  .stage-explain {
+    margin-top: 24px; padding: 16px;
+    background: rgba(124,107,255,0.08); border: 1px solid rgba(124,107,255,0.2);
+    border-radius: 12px; font-size: 13px; color: var(--muted); line-height: 1.7;
+  }
+  .stage-explain strong { color: var(--accent); }
+
+  /* ============================================
+     SECTION 4: PROTECTION EFFECTS
+  ============================================ */
+  .effects-tabs {
+    display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .effect-tab {
+    padding: 10px 20px; border-radius: 100px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--muted); font-size: 14px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .effect-tab:hover { border-color: rgba(124,107,255,0.4); color: var(--text); }
+  .effect-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .effect-panel { display: none; }
+  .effect-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media(max-width:700px){ .effect-panel.active{ grid-template-columns:1fr; } }
+
+  .effect-before, .effect-after {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+  }
+  .effect-label {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+  }
+  .label-before { color: var(--muted); }
+  .label-after { color: var(--accent3); }
+  .effect-visual { padding: 24px; min-height: 200px; }
+
+  /* app list visualization */
+  .app-list { display: flex; flex-direction: column; gap: 10px; }
+  .app-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; background: rgba(255,255,255,0.05);
+    border-radius: 10px; font-size: 14px;
+    transition: all 0.5s;
+  }
+  .app-item.protected { border-left: 3px solid var(--public); }
+  .app-item.safe { border-left: 3px solid var(--safe); }
+  .app-emoji { font-size: 20px; }
+  .app-name { flex: 1; }
+  .app-status {
+    font-size: 12px; padding: 3px 10px; border-radius: 100px;
+  }
+  .status-open { background: rgba(52,199,89,0.2); color: var(--safe); }
+  .status-quit { background: rgba(255,69,58,0.2); color: #ff453a; }
+  .status-mini { background: rgba(255,159,10,0.2); color: #ff9f0a; }
+
+  /* animate on trigger */
+  .effect-panel.active .app-item { animation: slideEffect 0.4s ease-out; }
+  @keyframes slideEffect { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+
+  /* ============================================
+     SECTION 5: HOTKEYS
+  ============================================ */
+  .hotkeys-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media(max-width:800px){ .hotkeys-grid{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:500px){ .hotkeys-grid{ grid-template-columns:1fr; } }
+
+  .hotkey-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .hotkey-card:hover { transform: translateY(-4px); border-color: rgba(124,107,255,0.4); }
+  .kbd-combo {
+    display: flex; align-items: center; justify-content: center;
+    gap: 4px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  kbd {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 36px; height: 36px; padding: 0 10px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+    border-radius: 8px; font-size: 13px; font-family: inherit;
+    color: var(--text);
+  }
+  .kbd-plus { color: var(--muted); font-size: 14px; }
+  .hotkey-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .hotkey-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ============================================
+     SECTION 6: MEMORY MECHANISM
+  ============================================ */
+  .memory-flow {
+    display: flex; align-items: center; gap: 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 24px; overflow: hidden;
+  }
+  @media(max-width:700px){ .memory-flow{ flex-direction:column; } }
+
+  .memory-step {
+    flex: 1; padding: 32px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 14px;
+    position: relative;
+  }
+  .memory-step:not(:last-child)::after {
+    content: '→';
+    position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px; color: var(--accent);
+    z-index: 2;
+  }
+  @media(max-width:700px){
+    .memory-step:not(:last-child)::after { content:'↓'; right:auto; top:auto; bottom:-10px; left:50%; transform:translateX(-50%); }
+  }
+  .memory-step + .memory-step { border-left: 1px solid var(--border); }
+  @media(max-width:700px){ .memory-step + .memory-step { border-left:none; border-top:1px solid var(--border); } }
+  .memory-icon { font-size: 36px; }
+  .memory-step h3 { font-size: 15px; font-weight: 700; }
+  .memory-step p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ============================================
+     FOOTER
+  ============================================ */
+  footer {
+    text-align: center; padding: 60px 40px;
+    border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 14px;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* divider */
+  .section-divider {
+    height: 1px; background: var(--border);
+    max-width: 1100px; margin: 0 auto;
+  }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Dam <span>指南</span></div>
+  <div class="nav-links">
+    <a href="#triggers">触发场景</a>
+    <a href="#screen">标记屏幕</a>
+    <a href="#meeting">录屏检测</a>
+    <a href="#effects">保护效果</a>
+    <a href="#hotkeys">快捷键</a>
+  </div>
+</nav>
+
+<div id="progress"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag">Dam · 使用指南</div>
+  <h1>屏幕保护，<span>从这里开始</span></h1>
+  <p>了解 Dam 如何在每个场景下自动保护你的隐私，以及如何精准控制保护行为。</p>
+  <div class="scroll-hint">
+    <span>向下滚动</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</div>
+
+<!-- SECTION 1: TRIGGERS -->
+<div class="section-divider"></div>
+<section id="triggers">
+  <div class="fade-in">
+    <div class="section-label">01 · 触发场景</div>
+    <h2>什么时候 Dam 会介入？</h2>
+    <p class="section-desc">Dam 持续在后台运行，监控两种核心场景——只要检测到潜在风险，立即介入。</p>
+  </div>
+  <div class="triggers-grid">
+    <div class="trigger-card fade-in">
+      <div class="trigger-icon">🖥️</div>
+      <h3>接入外部屏幕</h3>
+      <p>连接投影仪、外接显示器、AirPlay 或 Sidecar 时，Dam 立即检测到新屏幕。如果这块屏幕从未被分类，会弹出标记界面，要求你告知这是公开还是安全环境。</p>
+      <div class="trigger-badge">物理投屏</div>
+    </div>
+    <div class="trigger-card fade-in" style="transition-delay:0.1s">
+      <div class="trigger-icon">📹</div>
+      <h3>会议录屏共享</h3>
+      <p>Zoom、Teams、Google Meet 等软件开始录制或共享屏幕时，Dam 通过系统 API 实时感知，弹出提示询问当前是否处于公共场景。</p>
+      <div class="trigger-badge" style="background:rgba(255,69,58,0.1);border-color:rgba(255,69,58,0.3);color:#ff453a">会议共享</div>
+    </div>
+    <div class="trigger-card fade-in" style="transition-delay:0.2s">
+      <div class="trigger-icon">⌨️</div>
+      <h3>全局快捷键</h3>
+      <p>任何时候，直接按下你设置的快捷键，Dam 立即执行保护动作——无需连接屏幕，无需等待。适合你预感风险、想快速清场的场景。</p>
+      <div class="trigger-badge" style="background:rgba(124,107,255,0.1);border-color:rgba(124,107,255,0.3);color:var(--accent)">手动触发</div>
+    </div>
+    <div class="trigger-card fade-in" style="transition-delay:0.3s">
+      <div class="trigger-icon">🔄</div>
+      <h3>已记忆的屏幕自动执行</h3>
+      <p>你标记过的屏幕，Dam 会记住它的硬件 ID。下次接入同一块屏幕，直接按记忆执行策略——安全屏幕无感通过，公开屏幕立即触发保护，无需再次确认。</p>
+      <div class="trigger-badge" style="background:rgba(78,205,196,0.1);border-color:rgba(78,205,196,0.3);color:var(--accent3)">自动执行</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: SCREEN MARKING -->
+<div class="section-divider"></div>
+<section id="screen">
+  <div class="fade-in">
+    <div class="section-label">02 · 标记屏幕</div>
+    <h2>如何标记公开 / 安全屏幕？</h2>
+    <p class="section-desc">每当接入未知屏幕，Dam 会在该屏幕上弹出一个全屏玻璃浮层。点击不同区域，告知 Dam 这个环境是否安全。</p>
+  </div>
+
+  <div class="overlay-demo fade-in">
+    <div class="overlay-demo-header">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+      <span style="margin-left:8px">外部显示器 — 首次接入</span>
+    </div>
+
+    <div class="overlay-screen" id="overlayScreen">
+      <!-- fake bg -->
+      <div class="fake-bg">
+        <div class="fake-bar"></div>
+        <div class="fake-content">
+          <div class="fake-sidebar"></div>
+          <div class="fake-main">
+            <div class="fake-card-sm"></div>
+            <div class="fake-card-sm"></div>
+            <div class="fake-card-lg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- dam overlay -->
+      <div class="dam-overlay" id="damOverlay">
+        <div class="dam-circle-wrap" id="circleWrap">
+          <div class="dam-ring-outer" id="ringOuter">
+            <div class="dam-ring-inner" id="ringInner">
+              <div class="dam-icon">🛡️</div>
+              <div class="dam-text">安全</div>
+              <div class="zone-label-inner">点击圆圈内 → 安全</div>
+            </div>
+            <div class="zone-label-outer">点击圆圈外 → 公开</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- result overlay -->
+      <div class="overlay-result" id="overlayResult">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-text" id="resultText"></div>
+        <div class="result-desc" id="resultDesc"></div>
+        <button class="result-reset" onclick="resetOverlay()">← 重新试试</button>
+      </div>
+
+      <div class="overlay-hint" id="overlayHint">👆 点击圆圈内或圆圈外，体验标记效果</div>
+    </div>
+
+    <div class="overlay-instructions">
+      <div class="instr-item">
+        <div class="instr-dot" style="background:var(--safe)"></div>
+        <p><strong>点击圆圈内区域</strong><br>标记为「安全屏幕」。Dam 不做任何保护动作，你的私人应用照常运行。此屏幕会被记住，下次接入直接通过。</p>
+      </div>
+      <div class="instr-item">
+        <div class="instr-dot" style="background:var(--public)"></div>
+        <p><strong>点击圆圈外区域</strong><br>标记为「公开屏幕」。Dam 立即触发保护——关闭或最小化你设置的敏感应用。此屏幕会被记住，下次接入自动执行。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: MEETING DETECTION -->
+<div class="section-divider"></div>
+<section id="meeting">
+  <div class="fade-in">
+    <div class="section-label">03 · 录屏检测</div>
+    <h2>开始录屏时如何选择？</h2>
+    <p class="section-desc">Dam 实时监控屏幕共享状态。检测到录屏或会议共享时，弹出询问——由你决定是否触发保护。</p>
+  </div>
+
+  <div class="meeting-demo fade-in">
+    <div class="meeting-header">
+      <div class="meeting-header-left">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span style="font-size:14px;color:var(--muted);margin-left:8px">Zoom · 正在共享屏幕</span>
+      </div>
+      <div class="rec-indicator">
+        <div class="rec-dot"></div>
+        REC
+      </div>
+    </div>
+
+    <div class="meeting-stages">
+      <div class="stage-nav">
+        <button class="stage-btn active" onclick="switchStage(0)">
+          <div class="stage-num">1</div>检测到共享
+        </button>
+        <button class="stage-btn" onclick="switchStage(1)">
+          <div class="stage-num">2</div>选择安全模式
+        </button>
+        <button class="stage-btn" onclick="switchStage(2)">
+          <div class="stage-num">3</div>选择公开模式
+        </button>
+      </div>
+
+      <div class="stage-content">
+        <!-- Stage 0 -->
+        <div class="stage-panel active" id="stage-0">
+          <div class="meeting-modal">
+            <div class="meeting-modal-icon">📡</div>
+            <h3>检测到屏幕共享</h3>
+            <p>Dam 发现你的屏幕正在被 Zoom 录制/共享。现在是公开场合吗？</p>
+            <div class="meeting-modal-btns">
+              <button class="btn-safe" onclick="switchStage(1)">🔒 这是私人空间</button>
+              <button class="btn-public" onclick="switchStage(2)">👥 是，公开场合</button>
+            </div>
+          </div>
+          <div class="stage-explain">
+            <strong>Dam 检测到</strong>：系统级屏幕共享 API 触发，共享来源：Zoom。弹出浮层由你决定当前场景。
+          </div>
+        </div>
+
+        <!-- Stage 1 -->
+        <div class="stage-panel" id="stage-1">
+          <div class="meeting-modal" style="border-color:rgba(52,199,89,0.3)">
+            <div class="meeting-modal-icon">✅</div>
+            <h3 style="color:var(--safe)">继续，无需保护</h3>
+            <p>你告知 Dam 这是安全/私密的会议。所有应用正常运行，不做任何处理。</p>
+            <button class="btn-safe" style="width:100%" onclick="switchStage(0)">← 返回</button>
+          </div>
+          <div class="stage-explain">
+            <strong>结果</strong>：什么都不发生。Dam 安静等待，继续监控。下次检测到新的共享事件，还会再次询问。
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="stage-panel" id="stage-2">
+          <div class="meeting-modal" style="border-color:rgba(255,69,58,0.3)">
+            <div class="meeting-modal-icon">🛡️</div>
+            <h3 style="color:#ff453a">保护已触发</h3>
+            <p>Dam 立即执行保护动作：关闭或最小化你设置的所有敏感应用。</p>
+            <button class="btn-public" style="width:100%" onclick="switchStage(0)">← 返回</button>
+          </div>
+          <div class="stage-explain">
+            <strong>结果</strong>：微信、银行 App、个人邮件等受保护应用立即关闭或最小化，屏幕只保留工作相关内容。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: EFFECTS -->
+<div class="section-divider"></div>
+<section id="effects">
+  <div class="fade-in">
+    <div class="section-label">04 · 保护效果</div>
+    <h2>开启保护后会发生什么？</h2>
+    <p class="section-desc">不同的保护模式，结果不同。选择最适合你工作习惯的方式。</p>
+  </div>
+
+  <div class="effects-tabs fade-in">
+    <button class="effect-tab active" onclick="switchEffect(0)">应用保护（关闭模式）</button>
+    <button class="effect-tab" onclick="switchEffect(1)">应用保护（最小化模式）</button>
+    <button class="effect-tab" onclick="switchEffect(2)">文件夹隐私</button>
+    <button class="effect-tab" onclick="switchEffect(3)">浏览器隐私</button>
+  </div>
+
+  <!-- Effect 0: Quit -->
+  <div class="effect-panel active fade-in" id="effect-0">
+    <div class="effect-before">
+      <div class="effect-label label-before">🔴 触发前 — 正常运行</div>
+      <div class="effect-visual">
+        <div class="app-list">
+          <div class="app-item protected"><span class="app-emoji">💬</span><span class="app-name">微信</span><span class="app-status status-open">运行中</span></div>
+          <div class="app-item protected"><span class="app-emoji">🏦</span><span class="app-name">招商银行</span><span class="app-status status-open">运行中</span></div>
+          <div class="app-item protected"><span class="app-emoji">📧</span><span class="app-name">Mail</span><span class="app-status status-open">运行中</span></div>
+          <div class="app-item safe"><span class="app-emoji">📊</span><span class="app-name">Keynote</span><span class="app-status status-open">运行中</span></div>
+          <div class="app-item safe"><span class="app-emoji">🌐</span><span class="app-name">Safari</span><span class="app-status status-open">运行中</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">红色边框 = 受保护应用</p>
+      </div>
+    </div>
+    <div class="effect-after">
+      <div class="effect-label label-after">✅ 触发后 — 关闭模式</div>
+      <div class="effect-visual">
+        <div class="app-list">
+          <div class="app-item" style="opacity:0.35;border-left:3px solid #ff453a"><span class="app-emoji">💬</span><span class="app-name">微信</span><span class="app-status status-quit">已退出</span></div>
+          <div class="app-item" style="opacity:0.35;border-left:3px solid #ff453a"><span class="app-emoji">🏦</span><span class="app-name">招商银行</span><span class="app-status status-quit">已退出</span></div>
+          <div class="app-item" style="opacity:0.35;border-left:3px solid #ff453a"><span class="app-emoji">📧</span><span class="app-name">Mail</span><span class="app-status status-quit">已退出</span></div>
+          <div class="app-item safe"><span class="app-emoji">📊</span><span class="app-name">Keynote</span><span class="app-status status-open">运行中</span></div>
+          <div class="app-item safe"><span class="app-emoji">🌐</span><span class="app-name">Safari</span><span class="app-status status-open">运行中</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">敏感应用彻底退出，安全应用不受影响</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Effect 1: Minimize -->
+  <div class="effect-panel" id="effect-1">
+    <div class="effect-before">
+      <div class="effect-label label-before">🔴 触发前 — 正常运行</div>
+      <div class="effect-visual">
+        <div class="app-list">
+          <div class="app-item protected"><span class="app-emoji">💬</span><span class="app-name">微信</span><span class="app-status status-open">前台显示</span></div>
+          <div class="app-item protected"><span class="app-emoji">🏦</span><span class="app-name">招商银行</span><span class="app-status status-open">前台显示</span></div>
+          <div class="app-item protected"><span class="app-emoji">📧</span><span class="app-name">Mail</span><span class="app-status status-open">前台显示</span></div>
+          <div class="app-item safe"><span class="app-emoji">📊</span><span class="app-name">Keynote</span><span class="app-status status-open">运行中</span></div>
+          <div class="app-item safe"><span class="app-emoji">🌐</span><span class="app-name">Safari</span><span class="app-status status-open">运行中</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="effect-after">
+      <div class="effect-label label-after">✅ 触发后 — 最小化模式</div>
+      <div class="effect-visual">
+        <div class="app-list">
+          <div class="app-item" style="border-left:3px solid #ff9f0a"><span class="app-emoji">💬</span><span class="app-name">微信</span><span class="app-status status-mini">已最小化</span></div>
+          <div class="app-item" style="border-left:3px solid #ff9f0a"><span class="app-emoji">🏦</span><span class="app-name">招商银行</span><span class="app-status status-mini">已最小化</span></div>
+          <div class="app-item" style="border-left:3px solid #ff9f0a"><span class="app-emoji">📧</span><span class="app-name">Mail</span><span class="app-status status-mini">已最小化</span></div>
+          <div class="app-item safe"><span class="app-emoji">📊</span><span class="app-name">Keynote</span><span class="app-status status-open">运行中</span></div>
+          <div class="app-item safe"><span class="app-emoji">🌐</span><span class="app-name">Safari</span><span class="app-status status-open">运行中</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">窗口收进 Dock，会话保留，会议结束后点击恢复</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Effect 2: File Privacy -->
+  <div class="effect-panel" id="effect-2">
+    <div class="effect-before">
+      <div class="effect-label label-before">🔴 投屏前 — 文件夹可见</div>
+      <div class="effect-visual">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:8px">
+          <div style="text-align:center;font-size:32px">📁<br><span style="font-size:12px;color:var(--muted)">工作</span></div>
+          <div style="text-align:center;font-size:32px">📁<br><span style="font-size:12px;color:var(--muted)">私人照片</span></div>
+          <div style="text-align:center;font-size:32px">📁<br><span style="font-size:12px;color:var(--muted)">财务记录</span></div>
+          <div style="text-align:center;font-size:32px">📁<br><span style="font-size:12px;color:var(--muted)">合同文件</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">桌面和 Finder 侧边栏中所有文件夹可见</p>
+      </div>
+    </div>
+    <div class="effect-after">
+      <div class="effect-label label-after">✅ 投屏后 — 敏感文件夹隐藏</div>
+      <div class="effect-visual">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:8px">
+          <div style="text-align:center;font-size:32px">📁<br><span style="font-size:12px;color:var(--muted)">工作</span></div>
+          <div style="text-align:center;font-size:32px;opacity:0.15">📁<br><span style="font-size:12px;color:var(--muted)">私人照片</span></div>
+          <div style="text-align:center;font-size:32px;opacity:0.15">📁<br><span style="font-size:12px;color:var(--muted)">财务记录</span></div>
+          <div style="text-align:center;font-size:32px;opacity:0.15">📁<br><span style="font-size:12px;color:var(--muted)">合同文件</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">你设置的私密文件夹自动隐藏，投屏结束后恢复</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Effect 3: Web Privacy -->
+  <div class="effect-panel" id="effect-3">
+    <div class="effect-before">
+      <div class="effect-label label-before">🔴 投屏前 — 标签页可见</div>
+      <div class="effect-visual">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="padding:8px 14px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center">🏦 <span>招商银行 · 账户明细</span></div>
+          <div style="padding:8px 14px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center">📧 <span>Gmail · 收件箱</span></div>
+          <div style="padding:8px 14px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center">💼 <span>工作项目文档</span></div>
+          <div style="padding:8px 14px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center">📰 <span>新闻 · 今日头条</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="effect-after">
+      <div class="effect-label label-after">✅ 投屏后 — 私密标签页隐藏</div>
+      <div class="effect-visual">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="padding:8px 14px;background:rgba(255,69,58,0.08);border:1px dashed rgba(255,69,58,0.3);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center;opacity:0.4">🏦 <span>已隐藏</span></div>
+          <div style="padding:8px 14px;background:rgba(255,69,58,0.08);border:1px dashed rgba(255,69,58,0.3);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center;opacity:0.4">📧 <span>已隐藏</span></div>
+          <div style="padding:8px 14px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center">💼 <span>工作项目文档</span></div>
+          <div style="padding:8px 14px;background:rgba(255,255,255,0.05);border-radius:8px;font-size:13px;display:flex;gap:8px;align-items:center">📰 <span>新闻 · 今日头条</span></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:12px">银行、邮件等敏感标签页自动关闭，投屏结束后可恢复</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: HOTKEYS -->
+<div class="section-divider"></div>
+<section id="hotkeys">
+  <div class="fade-in">
+    <div class="section-label">05 · 快捷键</div>
+    <h2>随时一键触发保护</h2>
+    <p class="section-desc">不需要接外部屏幕，任何时候都可以用快捷键立即保护。在任何应用中均有效。</p>
+  </div>
+
+  <div class="hotkeys-grid">
+    <div class="hotkey-card fade-in">
+      <div class="kbd-combo">
+        <kbd>⌃</kbd><span class="kbd-plus">+</span>
+        <kbd>⌥</kbd><span class="kbd-plus">+</span>
+        <kbd>⌘</kbd><span class="kbd-plus">+</span>
+        <kbd>W</kbd>
+      </div>
+      <h3>立即关闭</h3>
+      <p>彻底退出所有受保护应用。适合隐私敏感度高的场景，确保内容不可见。</p>
+    </div>
+    <div class="hotkey-card fade-in" style="transition-delay:0.1s">
+      <div class="kbd-combo">
+        <kbd>⌃</kbd><span class="kbd-plus">+</span>
+        <kbd>⌥</kbd><span class="kbd-plus">+</span>
+        <kbd>⌘</kbd><span class="kbd-plus">+</span>
+        <kbd>Y</kbd>
+      </div>
+      <h3>立即最小化</h3>
+      <p>将受保护应用的所有窗口收到 Dock。会话不中断，会议结束后点击恢复。</p>
+    </div>
+    <div class="hotkey-card fade-in" style="transition-delay:0.2s">
+      <div class="kbd-combo">
+        <kbd>⌥</kbd><span class="kbd-plus">+</span>
+        <kbd>Tab</kbd>
+      </div>
+      <h3>隐私 App 切换器</h3>
+      <p>替代系统默认切换器，受保护应用不出现在列表中。投屏时切换应用更安全。</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: MEMORY -->
+<div class="section-divider"></div>
+<section>
+  <div class="fade-in">
+    <div class="section-label">06 · 记忆机制</div>
+    <h2>一次标记，终身记住</h2>
+    <p class="section-desc">Dam 通过硬件 ID 唯一识别每块显示器，你的选择永久保存，无需重复操作。</p>
+  </div>
+
+  <div class="memory-flow fade-in">
+    <div class="memory-step">
+      <div class="memory-icon">🖥️</div>
+      <h3>接入新屏幕</h3>
+      <p>未知屏幕触发弹出，要求标记</p>
+    </div>
+    <div class="memory-step">
+      <div class="memory-icon">🏷️</div>
+      <h3>你做出选择</h3>
+      <p>点击圆圈内（安全）或圆圈外（公开）</p>
+    </div>
+    <div class="memory-step">
+      <div class="memory-icon">💾</div>
+      <h3>策略永久存储</h3>
+      <p>通过厂商 + 型号 + 序列号识别，本地存储</p>
+    </div>
+    <div class="memory-step">
+      <div class="memory-icon">⚡️</div>
+      <h3>下次自动执行</h3>
+      <p>同一屏幕接入，直接按记忆执行，零等待</p>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;padding:24px;background:rgba(124,107,255,0.08);border:1px solid rgba(124,107,255,0.2);border-radius:16px;font-size:14px;color:var(--muted);line-height:1.7" class="fade-in">
+    💡 <strong style="color:var(--text)">想修改之前的标记？</strong> 打开 Dam 设置 → 屏幕策略 标签页，查看所有已记录的屏幕，可以修改 安全/公开 分类、添加备注，或删除记录（删除后下次接入重新询问）。
+  </div>
+</section>
+
+<footer>
+  <p>Dam · 屏幕隐私保护 for macOS</p>
+  <p style="margin-top:8px"><a href="https://dam.astrocean.love">dam.astrocean.love</a></p>
+</footer>
+
+<script>
+// PROGRESS BAR
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const scrollTop = window.scrollY;
+  const scrollHeight = doc.scrollHeight - doc.clientHeight;
+  const progress = (scrollTop / scrollHeight) * 100;
+  document.getElementById('progress').style.width = progress + '%';
+});
+
+// FADE IN OBSERVER
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// OVERLAY DEMO
+const screen = document.getElementById('overlayScreen');
+const ringInner = document.getElementById('ringInner');
+const ringOuter = document.getElementById('ringOuter');
+const overlayResult = document.getElementById('overlayResult');
+const overlayHint = document.getElementById('overlayHint');
+let overlayDone = false;
+
+screen.addEventListener('mousemove', (e) => {
+  if (overlayDone) return;
+  const wrap = document.getElementById('circleWrap');
+  const rect = wrap.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const r = rect.width / 2;
+  const dx = e.clientX - cx;
+  const dy = e.clientY - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const innerR = 80; // roughly half of 160px inner circle
+
+  if (dist < innerR) {
+    ringInner.classList.add('hovered-safe');
+    ringOuter.classList.remove('hovered-public');
+    screen.style.cursor = 'pointer';
+  } else if (dist < r) {
+    ringOuter.classList.add('hovered-public');
+    ringInner.classList.remove('hovered-safe');
+    screen.style.cursor = 'pointer';
+  } else {
+    ringInner.classList.remove('hovered-safe');
+    ringOuter.classList.remove('hovered-public');
+    screen.style.cursor = 'default';
+  }
+});
+
+screen.addEventListener('mouseleave', () => {
+  ringInner.classList.remove('hovered-safe');
+  ringOuter.classList.remove('hovered-public');
+});
+
+screen.addEventListener('click', (e) => {
+  if (overlayDone) return;
+
+  const wrap = document.getElementById('circleWrap');
+  const rect = wrap.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const r = rect.width / 2;
+  const dx = e.clientX - cx;
+  const dy = e.clientY - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const innerR = 80;
+
+  // ripple
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  ripple.style.left = (e.clientX - screen.getBoundingClientRect().left) + 'px';
+  ripple.style.top = (e.clientY - screen.getBoundingClientRect().top) + 'px';
+  screen.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 700);
+
+  if (dist < innerR) {
+    // SAFE
+    overlayDone = true;
+    overlayHint.style.display = 'none';
+    document.getElementById('resultIcon').textContent = '✅';
+    document.getElementById('resultText').textContent = '标记为安全屏幕';
+    document.getElementById('resultDesc').textContent = 'Dam 不做任何处理。所有应用继续运行，此屏幕已被记住，下次接入自动通过。';
+    overlayResult.classList.add('show');
+  } else if (dist < r) {
+    // PUBLIC
+    overlayDone = true;
+    overlayHint.style.display = 'none';
+    document.getElementById('resultIcon').textContent = '🛡️';
+    document.getElementById('resultText').innerHTML = '<span style="color:#ff453a">标记为公开屏幕</span>';
+    document.getElementById('resultDesc').textContent = 'Dam 立即触发保护——微信、银行 App 等敏感应用关闭或最小化。此屏幕已被记住，下次接入自动执行。';
+    overlayResult.classList.add('show');
+  }
+});
+
+function resetOverlay() {
+  overlayDone = false;
+  overlayResult.classList.remove('show');
+  overlayHint.style.display = '';
+}
+
+// MEETING STAGES
+function switchStage(i) {
+  document.querySelectorAll('.stage-btn').forEach((b, j) => {
+    b.classList.toggle('active', i === j);
+  });
+  document.querySelectorAll('.stage-panel').forEach((p, j) => {
+    p.classList.toggle('active', i === j);
+  });
+}
+
+// EFFECT TABS
+function switchEffect(i) {
+  document.querySelectorAll('.effect-tab').forEach((t, j) => {
+    t.classList.toggle('active', i === j);
+  });
+  document.querySelectorAll('.effect-panel').forEach((p, j) => {
+    p.classList.toggle('active', i === j);
+  });
+}
+</script>
+</body>
+</html>
