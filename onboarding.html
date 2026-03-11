@@ -105,6 +105,7 @@ body {
 .flow-grid {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 112px;
   position: relative;
   width: 100%;
@@ -115,7 +116,7 @@ body {
   pointer-events: none;
   overflow: visible; z-index: 0;
 }
-.col-triggers, .col-effects { display: flex; flex-direction: column; gap: 16px; flex: 1; position: relative; z-index: 1; }
+.col-triggers, .col-effects { display: flex; flex-direction: column; gap: 16px; flex: 0 0 320px; position: relative; z-index: 1; }
 .dam-col { position: relative; z-index: 1; flex-shrink: 0; }
 
 /* trigger/effect cards */
