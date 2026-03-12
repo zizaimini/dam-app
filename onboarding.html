@@ -481,6 +481,50 @@ body {
 .p3-text .lead strong { color:#1a1a2e; }
 .p3-vis { width:460px;flex-shrink:0; }
 
+/* vote screen inside the fake-screen */
+.fake-vote {
+  position:absolute;inset:0;
+  background:#f0f2f8;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:18px;
+  animation: voteToLoad 5s ease-in-out infinite;
+}
+.vote-title {
+  font-size:14px;font-weight:700;color:#1a1a3e;letter-spacing:.3px;
+}
+.vote-options { display:flex;flex-direction:column;gap:8px;width:100%; }
+.vote-opt {
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border-radius:8px;padding:7px 12px;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+.vote-opt-bar-wrap {
+  flex:1;height:7px;background:#e8eaf0;border-radius:4px;overflow:hidden;
+}
+.vote-opt-bar { height:100%;border-radius:4px;background:linear-gradient(90deg,#5b7fff,#7c5ff5); }
+.vote-opt-label { font-size:11px;color:#5a5a7a;white-space:nowrap; }
+.vote-badge {
+  font-size:10px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#5b7fff,#7c5ff5);
+  padding:3px 9px;border-radius:20px;
+}
+.fake-loading-overlay {
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#a8d8f0 0%,#90c8e8 40%,#a0d4c0 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  animation: loadOverlayAnim 5s ease-in-out infinite;
+}
+.loading-label {
+  font-size:13px;color:rgba(255,255,255,.85);font-weight:500;letter-spacing:.5px;
+}
+@keyframes voteToLoad {
+  0%,40%   { opacity:1; }
+  50%,100% { opacity:0; }
+}
+@keyframes loadOverlayAnim {
+  0%,40%   { opacity:0; }
+  50%,100% { opacity:1; }
+
 /* ============================================
    PAGE 4: MENUBAR
    ============================================ */
@@ -809,10 +853,30 @@ body {
     <div class="content">
       <div class="p3-body">
         <div class="p3-vis">
-          <div class="fake-screen">
-            <div class="fake-screen-blur"></div>
-            <div class="fake-loading">
+          <div class="fake-screen" style="background:#f0f2f8;">
+            <!-- Step 1: vote screen -->
+            <div class="fake-vote">
+              <div class="vote-badge">📊 正在投票</div>
+              <div class="vote-title">本次汇报你最关注哪个方向？</div>
+              <div class="vote-options">
+                <div class="vote-opt">
+                  <div class="vote-opt-bar-wrap"><div class="vote-opt-bar" style="width:62%"></div></div>
+                  <div class="vote-opt-label">市场增长 62%</div>
+                </div>
+                <div class="vote-opt">
+                  <div class="vote-opt-bar-wrap"><div class="vote-opt-bar" style="width:24%;background:linear-gradient(90deg,#ff9f5b,#ff6b8b)"></div></div>
+                  <div class="vote-opt-label">产品路线 24%</div>
+                </div>
+                <div class="vote-opt">
+                  <div class="vote-opt-bar-wrap"><div class="vote-opt-bar" style="width:14%;background:linear-gradient(90deg,#5bdfb5,#5b9fff)"></div></div>
+                  <div class="vote-opt-label">团队扩张 14%</div>
+                </div>
+              </div>
+            </div>
+            <!-- Step 2: Dam loading overlay -->
+            <div class="fake-loading-overlay">
               <div class="fake-spinner"></div>
+              <div class="loading-label">系统准备中…</div>
             </div>
           </div>
           <p class="screen-caption">共享屏幕时，观众先看到加载页面，你有时间做出选择</p>
