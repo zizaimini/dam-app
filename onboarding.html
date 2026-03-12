@@ -66,9 +66,10 @@ body {
 
 /* BOTTOM NAV */
 .bottom-nav {
-  position: absolute; bottom: 36px; left: 0; right: 0;
+  position: absolute; bottom: 20px; left: 0; right: 0;
   display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
+.btn-row { display: flex; gap: 12px; align-items: center; }
 .btn-primary {
   background: #3b5bdb; color: white;
   border: none; border-radius: 12px;
@@ -79,6 +80,15 @@ body {
 }
 .btn-primary:hover { background: #2f4cbf; transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
+.btn-prev {
+  background: rgba(59,91,219,0.08); color: #3b5bdb;
+  border: 2px solid rgba(59,91,219,0.2); border-radius: 12px;
+  padding: 11px 28px; font-size: 16px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-prev:hover { background: rgba(59,91,219,0.15); transform: translateY(-1px); }
+.btn-prev:active { transform: translateY(0); }
 .btn-skip {
   background: none; border: none;
   color: rgba(80,80,120,0.55); font-size: 14px;
@@ -89,7 +99,7 @@ body {
 
 /* PROGRESS DOTS */
 .progress-dots {
-  position: fixed; bottom: 110px; left: 0; right: 0;
+  position: absolute; bottom: 92px; left: 0; right: 0;
   display: flex; justify-content: center; gap: 8px;
   z-index: 10;
 }
@@ -764,15 +774,15 @@ body {
 
 <div class="bg"></div>
 
-<!-- PROGRESS DOTS -->
-<div class="progress-dots">
-  <div class="dot active" id="d0"></div>
-  <div class="dot" id="d1"></div>
-  <div class="dot" id="d2"></div>
-  <div class="dot" id="d3"></div>
-</div>
-
 <div class="pages">
+
+  <!-- PROGRESS DOTS (inside pages so it stays within 1080×820) -->
+  <div class="progress-dots">
+    <div class="dot active" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+  </div>
 
   <!-- ==================== PAGE 1 ==================== -->
   <div class="page active" id="page-0">
@@ -960,7 +970,9 @@ body {
     </div>
 
     <div class="bottom-nav">
-      <button class="btn-primary" onclick="goTo(1)">下一步</button>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="goTo(1)">下一步</button>
+      </div>
       <button class="btn-skip" onclick="goTo(3)">结束指引</button>
     </div>
   </div>
@@ -1060,7 +1072,10 @@ body {
     </div>
 
     <div class="bottom-nav">
-      <button class="btn-primary" onclick="goTo(2)">下一步</button>
+      <div class="btn-row">
+        <button class="btn-prev" onclick="goTo(0)">上一步</button>
+        <button class="btn-primary" onclick="goTo(2)">下一步</button>
+      </div>
       <button class="btn-skip" onclick="goTo(3)">结束指引</button>
     </div>
   </div>
@@ -1140,7 +1155,10 @@ body {
     </div>
 
     <div class="bottom-nav">
-      <button class="btn-primary" onclick="goTo(3)">下一步</button>
+      <div class="btn-row">
+        <button class="btn-prev" onclick="goTo(1)">上一步</button>
+        <button class="btn-primary" onclick="goTo(3)">下一步</button>
+      </div>
       <button class="btn-skip" onclick="goTo(3)">结束指引</button>
     </div>
   </div>
@@ -1170,7 +1188,10 @@ body {
     </div>
 
     <div class="bottom-nav">
-      <button class="btn-primary" onclick="finish()">完成</button>
+      <div class="btn-row">
+        <button class="btn-prev" onclick="goTo(2)">上一步</button>
+        <button class="btn-primary" onclick="finish()">完成</button>
+      </div>
     </div>
   </div>
 
