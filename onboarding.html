@@ -473,6 +473,120 @@ body {
 }
 
 /* ============================================
+   PAGE 2: MONITOR SCENE
+   ============================================ */
+.p2-scene {
+  display:flex;align-items:flex-end;justify-content:center;
+  gap:0;width:100%;position:relative;
+}
+/* Monitor */
+.p2-mon { display:flex;flex-direction:column;align-items:center;flex-shrink:0; }
+.p2-mon-screen {
+  width:154px;height:96px;
+  border-radius:6px 6px 0 0;
+  border:3px solid #1a1a2e;
+  background:#050508;
+  overflow:hidden;position:relative;
+}
+.p2-mon-chin { width:154px;height:5px;background:#222;border-radius:0 0 2px 2px; }
+.p2-mon-neck { width:14px;height:28px;background:linear-gradient(180deg,#c4c8d0,#a0a4ac); }
+.p2-mon-base { width:54px;height:8px;background:linear-gradient(180deg,#b4b8c0,#9094a0);border-radius:4px; }
+.p2-mon-off {
+  position:absolute;inset:0;background:#050508;
+  display:flex;align-items:center;justify-content:center;
+}
+.p2-power-dot { width:4px;height:4px;border-radius:50%;background:#ff9500;opacity:.4; }
+
+/* Cable area */
+.p2-cable-area { display:flex;align-items:flex-end;padding-bottom:44px;flex-shrink:0; }
+.p2-cable-svg { overflow:visible; }
+.p2-cable-path {
+  fill:none;stroke:#666;stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:150;stroke-dashoffset:150;opacity:.2;
+}
+
+/* Laptop */
+.p2-laptop { display:flex;flex-direction:column;align-items:center;flex-shrink:0; }
+.p2-laptop-lid {
+  width:138px;height:86px;
+  border-radius:6px 6px 0 0;
+  border:3px solid #1a1a2e;
+  background:#f0f2f8;
+  overflow:hidden;position:relative;
+}
+.p2-laptop-notch {
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:18px;height:5px;background:#1a1a2e;border-radius:0 0 4px 4px;z-index:2;
+}
+.p2-laptop-base {
+  width:150px;height:10px;
+  background:linear-gradient(180deg,#c8ccd4,#a0a4ac);
+  border-radius:0 0 5px 5px;
+}
+/* Laptop desktop content */
+.p2-desktop {
+  position:absolute;inset:0;
+  background:linear-gradient(145deg,#3a5fff 0%,#6a38e0 100%);
+}
+.p2-desktop-bar {
+  height:10px;background:rgba(255,255,255,.15);
+  display:flex;align-items:center;padding:0 5px;gap:3px;
+}
+.p2-desktop-dot { width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.4); }
+.p2-desktop-win {
+  position:absolute;border-radius:4px;background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);overflow:hidden;
+}
+.p2-desktop-win-bar { height:7px;display:flex;align-items:center;gap:2px;padding:0 3px; }
+.p2-desktop-win-dot { width:3px;height:3px;border-radius:50%; }
+.p2-desktop-line {
+  height:3px;border-radius:2px;background:#e0e4f0;margin:3px 5px 2px;
+}
+
+/* Loading overlay (both screens) */
+.p2-loading-overlay {
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,#a8d8f0 0%,#90c8e8 40%,#a0d4c0 100%);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;
+}
+.p2-spin {
+  width:22px;height:22px;
+  border:2.5px solid rgba(255,255,255,.3);
+  border-top-color:rgba(255,255,255,.9);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+/* Animations (active via .p2-run class, added by JS on page entry) */
+#page-1.p2-run .p2-mon-off         { animation: p2MonOff  6s ease-in-out infinite; }
+#page-1.p2-run .p2-desktop         { animation: p2Desk    6s ease-in-out infinite; }
+#page-1.p2-run .p2-loading-overlay { animation: p2Load    6s ease-in-out infinite; }
+#page-1.p2-run .p2-cable-path      { animation: p2Cable   6s ease-in-out infinite; }
+
+@keyframes p2MonOff {
+  0%,32%  { opacity:1; }
+  44%,82% { opacity:0; }
+  92%,100%{ opacity:1; }
+}
+@keyframes p2Desk {
+  0%,32%  { opacity:1; }
+  44%,82% { opacity:0; }
+  92%,100%{ opacity:1; }
+}
+@keyframes p2Load {
+  0%,38%  { opacity:0; }
+  48%,77% { opacity:1; }
+  87%,100%{ opacity:0; }
+}
+@keyframes p2Cable {
+  0%,24%  { stroke-dashoffset:150; opacity:.2; }
+  40%     { stroke-dashoffset:0;   opacity:1;  }
+  82%     { stroke-dashoffset:0;   opacity:1;  }
+  92%,100%{ stroke-dashoffset:150; opacity:.2; }
+}
+
+/* ============================================
    PAGE 3: MEETING SHARE
    ============================================ */
 .p3-body { display:flex;flex-direction:column;align-items:center;gap:28px;width:100%; }
@@ -864,13 +978,63 @@ body {
     <div class="content">
       <div class="p2-body">
         <div class="p2-vis">
-          <div class="fake-screen">
-            <div class="fake-screen-blur"></div>
-            <div class="fake-loading">
-              <div class="fake-spinner"></div>
+          <div class="p2-scene">
+            <!-- Monitor (left) -->
+            <div class="p2-mon">
+              <div class="p2-mon-screen">
+                <div class="p2-mon-off"><div class="p2-power-dot"></div></div>
+                <div class="p2-loading-overlay"><div class="p2-spin"></div></div>
+              </div>
+              <div class="p2-mon-chin"></div>
+              <div class="p2-mon-neck"></div>
+              <div class="p2-mon-base"></div>
+            </div>
+            <!-- Cable -->
+            <div class="p2-cable-area">
+              <svg class="p2-cable-svg" width="72" height="48" viewBox="0 0 72 48">
+                <!-- path from monitor side (left) to laptop side (right) -->
+                <path class="p2-cable-path" d="M4,8 C4,44 68,44 68,8"/>
+              </svg>
+            </div>
+            <!-- Laptop (right) -->
+            <div class="p2-laptop">
+              <div class="p2-laptop-lid">
+                <div class="p2-laptop-notch"></div>
+                <!-- Normal desktop -->
+                <div class="p2-desktop">
+                  <div class="p2-desktop-bar">
+                    <div class="p2-desktop-dot"></div>
+                    <div class="p2-desktop-dot"></div>
+                    <div class="p2-desktop-dot"></div>
+                  </div>
+                  <!-- Window 1 -->
+                  <div class="p2-desktop-win" style="top:14px;left:8px;width:58px;height:40px;">
+                    <div class="p2-desktop-win-bar" style="background:#e8eaf5;">
+                      <div class="p2-desktop-win-dot" style="background:#ff5f57;"></div>
+                      <div class="p2-desktop-win-dot" style="background:#febc2e;"></div>
+                      <div class="p2-desktop-win-dot" style="background:#28c840;"></div>
+                    </div>
+                    <div class="p2-desktop-line" style="width:70%;"></div>
+                    <div class="p2-desktop-line" style="width:50%;"></div>
+                    <div class="p2-desktop-line" style="width:80%;"></div>
+                  </div>
+                  <!-- Window 2 -->
+                  <div class="p2-desktop-win" style="top:20px;left:52px;width:50px;height:34px;background:#f0f8ff;">
+                    <div class="p2-desktop-win-bar" style="background:#ddeeff;">
+                      <div class="p2-desktop-win-dot" style="background:#ff5f57;"></div>
+                      <div class="p2-desktop-win-dot" style="background:#febc2e;"></div>
+                    </div>
+                    <div class="p2-desktop-line" style="width:60%;background:#c8dff0;"></div>
+                    <div class="p2-desktop-line" style="width:80%;background:#c8dff0;"></div>
+                  </div>
+                </div>
+                <!-- Loading overlay -->
+                <div class="p2-loading-overlay"><div class="p2-spin"></div></div>
+              </div>
+              <div class="p2-laptop-base"></div>
             </div>
           </div>
-          <p class="screen-caption">观众看到的是「系统准备中」，而非隐私保护操作</p>
+          <p class="screen-caption">接入外部屏幕时，Dam 立刻在显示器和笔记本上显示加载页面</p>
         </div>
 
         <div class="p2-text">
@@ -1148,11 +1312,17 @@ function goTo(n) {
   prev.classList.add('exit');
   setTimeout(() => prev.classList.remove('exit'), 500);
   if (current === 2) stopP3Anim(prev);
+  if (current === 1) prev.classList.remove('p2-run');
 
   current = n;
   const next = document.getElementById('page-' + current);
   next.classList.add('active');
   if (n === 0) setTimeout(drawArrows, 50);
+  if (n === 1) {
+    next.classList.remove('p2-run');
+    void next.offsetWidth;
+    setTimeout(() => next.classList.add('p2-run'), 60);
+  }
   if (n === 2) setTimeout(() => startP3Anim(next), 60);
 
   // update dots
