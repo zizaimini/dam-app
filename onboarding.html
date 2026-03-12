@@ -1040,28 +1040,22 @@ body {
                  Plug tip: x=281..285, y=148..156
                  In disconnected state plug right edge (x=285) is exactly at port. With translateX(+14px) → tip inserts 14px into port. -->
             <!--
-              Cable: cubic Bézier with vertical tangent at start, horizontal tangent at end.
-              P0=(128,159) fixed — exits monitor stand downward.
-              P3 starts at (267,182) and slides to (285,182) when connecting.
-              C1=(128, P0.y+160) keeps exit vertical.
-              C2=(P3.x-110, P3.y) keeps entry horizontal.
-              JS rAF updates P3 and C2 each frame so curve deforms naturally.
-              Port socket at x=285 on laptop left side.
-              Plug body+tip drawn at P3rest, translated by JS as P3 moves.
+              Cable: cubic Bézier. P0=(128,159) exits monitor stand downward.
+              P3 slides from X_REST=240 to X_CONN=282 at Y=195 (laptop base center).
+              Port socket at x=282, y=192 — left edge of laptop base (y=190..200).
+              Plug body left-edge aligned with P3 rest → translateX(px-X_REST) keeps connected.
             -->
             <svg class="p2-cable-svg" viewBox="0 0 440 200" preserveAspectRatio="xMidYMid meet">
               <!-- Bezier cable body (d updated by JS) -->
-              <path class="p2-cable-bezier" d="M128,159 C128,239 137,182 247,182"/>
-              <!-- Port socket -->
-              <rect x="285" y="174" width="3" height="16" rx="1" fill="#2a2a3a" opacity="0.4"/>
+              <path class="p2-cable-bezier" d="M128,159 C128,199 210,195 240,195"/>
+              <!-- Port socket on laptop base left side -->
+              <rect x="282" y="192" width="2" height="6" rx="0.5" fill="#2a2a3a" opacity="0.5"/>
               <!-- Type-C plug group (transform updated by JS) -->
               <g class="p2-plug" transform="translate(0,0)">
-                <!-- plug body -->
-                <rect x="268" y="174" width="13" height="15" rx="2" fill="#2e2e2e"/>
-                <!-- inner oval detail -->
-                <ellipse cx="274" cy="181" rx="4" ry="3" fill="#555" opacity="0.5"/>
-                <!-- male tip (the insert end, right side of plug) -->
-                <rect x="280" y="175" width="4" height="13" rx="1.5" fill="#444"/>
+                <!-- plug body (≈6×7px, centered on y=195.5) -->
+                <rect x="238" y="192" width="6" height="7" rx="1" fill="#2e2e2e"/>
+                <!-- male tip -->
+                <rect x="244" y="193" width="2" height="5" rx="0.5" fill="#444"/>
               </g>
             </svg>
           </div>
@@ -1287,11 +1281,11 @@ function startP2Anim(pageEl) {
 
   // Fixed: cable start and tangent lengths
   const P0 = { x: 128, y: 159 };
-  const TV = 80;    // vertical tension at P0 (control point below)
-  const TH = 110;   // horizontal tension at P3 (control point left of end)
+  const TV = 40;   // vertical tension at P0 (control point below)
+  const TH = 30;   // horizontal tension at P3 (control point left of end)
 
-  // Endpoints
-  const X_REST = 247, X_CONN = 285, Y = 182;
+  // Endpoints — Y=195 is laptop base center (base: y=190..200)
+  const X_REST = 240, X_CONN = 282, Y = 195;
 
   function setCable(px) {
     const c1x = P0.x, c1y = P0.y + TV;
