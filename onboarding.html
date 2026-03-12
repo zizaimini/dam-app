@@ -975,6 +975,14 @@ body {
       <div class="p2-body">
         <div class="p2-vis">
           <div class="p2-scene">
+            <!-- Cable SVG — first in DOM so it renders behind monitor and laptop -->
+            <svg class="p2-cable-svg" viewBox="0 0 440 200" preserveAspectRatio="xMidYMid meet">
+              <path class="p2-cable-bezier" d="M128,159 C128,199 210,195 240,195"/>
+              <g class="p2-plug" transform="translate(0,0)">
+                <rect x="238" y="192" width="6" height="7" rx="1" fill="#2e2e2e"/>
+                <rect x="244" y="193" width="2" height="5" rx="0.5" fill="#444"/>
+              </g>
+            </svg>
             <!-- Monitor (left) -->
             <div class="p2-mon">
               <div class="p2-mon-screen">
@@ -1023,41 +1031,6 @@ body {
               <div class="p2-laptop-base"></div>
             </div>
 
-            <!-- Cable SVG overlay
-                 Scene coords (440×165):
-                 Monitor chin bottom ≈ (90, 107)  [left=8, screen outer 160px, center x=88+8=96? recalc: left=8, mon-screen width=154+6border=160, center=8+80=88]
-                 Wait: monitor left=8, mon-screen width=154 (content) + 3px border each side = outer 160px
-                 Monitor center x = 8 + 80 = 88
-                 Cable exits at (88, monitor_chin_bottom):
-                   from bottom: base(8)+neck(28)+chin(5) = 41px → chin bottom at y=165-41=124? No:
-                   monitor total from bottom: base(8)+neck(28)+chin(5)+screen_outer(102) = 143px
-                   chin bottom (=screen bottom) = 165-8-28-5 = 124... let's say y=122
-                 Laptop right=8, base outer width=150px → left edge at 440-8-150=282
-                 Laptop lid outer width=138+6=144px → lid left edge at 282+(150-144)/2=285
-                 Horizontal cable y=152 (near base area of laptop)
-                 Port at x=285, y=148..158
-                 Plug body: x=267..283, y=146..158, rx=2
-                 Plug tip: x=281..285, y=148..156
-                 In disconnected state plug right edge (x=285) is exactly at port. With translateX(+14px) → tip inserts 14px into port. -->
-            <!--
-              Cable: cubic Bézier. P0=(128,159) exits monitor stand downward.
-              P3 slides from X_REST=240 to X_CONN=282 at Y=195 (laptop base center).
-              Port socket at x=282, y=192 — left edge of laptop base (y=190..200).
-              Plug body left-edge aligned with P3 rest → translateX(px-X_REST) keeps connected.
-            -->
-            <svg class="p2-cable-svg" viewBox="0 0 440 200" preserveAspectRatio="xMidYMid meet">
-              <!-- Bezier cable body (d updated by JS) -->
-              <path class="p2-cable-bezier" d="M128,159 C128,199 210,195 240,195"/>
-              <!-- Port socket on laptop base left side -->
-              <rect x="282" y="192" width="2" height="6" rx="0.5" fill="#2a2a3a" opacity="0.5"/>
-              <!-- Type-C plug group (transform updated by JS) -->
-              <g class="p2-plug" transform="translate(0,0)">
-                <!-- plug body (≈6×7px, centered on y=195.5) -->
-                <rect x="238" y="192" width="6" height="7" rx="1" fill="#2e2e2e"/>
-                <!-- male tip -->
-                <rect x="244" y="193" width="2" height="5" rx="0.5" fill="#444"/>
-              </g>
-            </svg>
           </div>
           <p class="screen-caption">接入外部屏幕时，Dam 立刻在显示器和笔记本上显示加载页面</p>
         </div>
@@ -1285,7 +1258,7 @@ function startP2Anim(pageEl) {
   const TH = 30;   // horizontal tension at P3 (control point left of end)
 
   // Endpoints — Y=195 is laptop base center (base: y=190..200)
-  const X_REST = 240, X_CONN = 282, Y = 195;
+  const X_REST = 240, X_CONN = 278, Y = 195;
 
   function setCable(px) {
     const c1x = P0.x, c1y = P0.y + TV;
