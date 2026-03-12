@@ -481,32 +481,52 @@ body {
 .p3-text .lead strong { color:#1a1a2e; }
 .p3-vis { width:460px;flex-shrink:0; }
 
-/* vote screen inside the fake-screen */
-.fake-vote {
+/* screen-share picker inside the fake-screen */
+.fake-share-picker {
   position:absolute;inset:0;
-  background:#f0f2f8;
+  background:#1e1e2e;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:14px;padding:18px;
-  animation: voteToLoad 5s ease-in-out infinite;
+  gap:12px;padding:16px;
+  animation: shareToLoad 5s ease-in-out infinite;
 }
-.vote-title {
-  font-size:14px;font-weight:700;color:#1a1a3e;letter-spacing:.3px;
+.share-picker-title {
+  font-size:12px;font-weight:600;color:rgba(255,255,255,.75);letter-spacing:.4px;
 }
-.vote-options { display:flex;flex-direction:column;gap:8px;width:100%; }
-.vote-opt {
-  display:flex;align-items:center;gap:8px;
-  background:#fff;border-radius:8px;padding:7px 12px;
-  box-shadow:0 1px 4px rgba(0,0,0,.08);
+.share-picker-thumbs {
+  display:flex;gap:10px;
 }
-.vote-opt-bar-wrap {
-  flex:1;height:7px;background:#e8eaf0;border-radius:4px;overflow:hidden;
+.share-thumb {
+  width:90px;height:56px;border-radius:7px;overflow:hidden;
+  border:2px solid transparent;
+  cursor:pointer;position:relative;
+  background:#2a2a3e;
 }
-.vote-opt-bar { height:100%;border-radius:4px;background:linear-gradient(90deg,#5b7fff,#7c5ff5); }
-.vote-opt-label { font-size:11px;color:#5a5a7a;white-space:nowrap; }
-.vote-badge {
-  font-size:10px;font-weight:700;color:#fff;
-  background:linear-gradient(135deg,#5b7fff,#7c5ff5);
-  padding:3px 9px;border-radius:20px;
+.share-thumb.selected {
+  border-color:#5b7fff;
+  box-shadow:0 0 0 2px rgba(91,127,255,.35);
+}
+.share-thumb-inner {
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  background:linear-gradient(135deg,#e8f0ff,#f0f4ff);
+}
+.share-thumb-bar {
+  height:10px;background:#d0d8f0;display:flex;align-items:center;padding:0 4px;gap:3px;flex-shrink:0;
+}
+.share-thumb-dot { width:4px;height:4px;border-radius:50%;background:#c0c8e0; }
+.share-thumb-content {
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:#8090c0;padding:2px;text-align:center;line-height:1.3;
+}
+.share-thumb-label {
+  position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);
+  font-size:9px;color:rgba(255,255,255,.5);white-space:nowrap;
+}
+.share-btn {
+  margin-top:6px;
+  font-size:11px;font-weight:600;color:#fff;
+  background:#5b7fff;border:none;border-radius:6px;
+  padding:5px 18px;cursor:pointer;
 }
 .fake-loading-overlay {
   position:absolute;inset:0;
@@ -517,7 +537,7 @@ body {
 .loading-label {
   font-size:13px;color:rgba(255,255,255,.85);font-weight:500;letter-spacing:.5px;
 }
-@keyframes voteToLoad {
+@keyframes shareToLoad {
   0%,40%   { opacity:1; }
   50%,100% { opacity:0; }
 }
@@ -854,24 +874,30 @@ body {
       <div class="p3-body">
         <div class="p3-vis">
           <div class="fake-screen" style="background:#f0f2f8;">
-            <!-- Step 1: vote screen -->
-            <div class="fake-vote">
-              <div class="vote-badge">📊 正在投票</div>
-              <div class="vote-title">本次汇报你最关注哪个方向？</div>
-              <div class="vote-options">
-                <div class="vote-opt">
-                  <div class="vote-opt-bar-wrap"><div class="vote-opt-bar" style="width:62%"></div></div>
-                  <div class="vote-opt-label">市场增长 62%</div>
+            <!-- Step 1: screen share picker -->
+            <div class="fake-share-picker">
+              <div class="share-picker-title">选择要共享的屏幕</div>
+              <div class="share-picker-thumbs">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                  <div class="share-thumb selected">
+                    <div class="share-thumb-inner">
+                      <div class="share-thumb-bar"><div class="share-thumb-dot"></div><div class="share-thumb-dot"></div><div class="share-thumb-dot"></div></div>
+                      <div class="share-thumb-content">整个屏幕</div>
+                    </div>
+                  </div>
+                  <div style="font-size:9px;color:rgba(255,255,255,.5);">桌面 1</div>
                 </div>
-                <div class="vote-opt">
-                  <div class="vote-opt-bar-wrap"><div class="vote-opt-bar" style="width:24%;background:linear-gradient(90deg,#ff9f5b,#ff6b8b)"></div></div>
-                  <div class="vote-opt-label">产品路线 24%</div>
-                </div>
-                <div class="vote-opt">
-                  <div class="vote-opt-bar-wrap"><div class="vote-opt-bar" style="width:14%;background:linear-gradient(90deg,#5bdfb5,#5b9fff)"></div></div>
-                  <div class="vote-opt-label">团队扩张 14%</div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+                  <div class="share-thumb">
+                    <div class="share-thumb-inner" style="background:linear-gradient(135deg,#fff8ee,#fff3e0);">
+                      <div class="share-thumb-bar" style="background:#ffe0b0;"><div class="share-thumb-dot" style="background:#ffc080;"></div><div class="share-thumb-dot" style="background:#ffc080;"></div></div>
+                      <div class="share-thumb-content" style="color:#b08040;">Keynote</div>
+                    </div>
+                  </div>
+                  <div style="font-size:9px;color:rgba(255,255,255,.5);">窗口</div>
                 </div>
               </div>
+              <button class="share-btn">开始共享</button>
             </div>
             <!-- Step 2: Dam loading overlay -->
             <div class="fake-loading-overlay">
