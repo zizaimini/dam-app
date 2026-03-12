@@ -505,9 +505,8 @@ body {
 }
 .p2-cable-body {
   fill:none;stroke:#444;stroke-width:4.5;stroke-linecap:round;
-  opacity:.3;
 }
-.p2-plug { opacity:.3; }
+.p2-plug { }
 
 /* Laptop — absolute right */
 .p2-laptop { position:absolute;bottom:0;right:8px;display:flex;flex-direction:column;align-items:center; }
@@ -566,7 +565,6 @@ body {
 #page-1.p2-run .p2-mon-off         { animation: p2MonOff   7s ease-in-out infinite; }
 #page-1.p2-run .p2-desktop         { animation: p2Desk     7s ease-in-out infinite; }
 #page-1.p2-run .p2-loading-overlay { animation: p2Load     7s ease-in-out infinite; }
-#page-1.p2-run .p2-cable-body      { animation: p2CableOp  7s ease-in-out infinite; }
 #page-1.p2-run .p2-plug            { animation: p2PlugAnim 7s ease-in-out infinite; }
 
 @keyframes p2MonOff {
@@ -584,20 +582,12 @@ body {
   48%,78% { opacity:1; }
   88%,100%{ opacity:0; }
 }
-@keyframes p2CableOp {
-  0%,26%  { opacity:.3; }
-  40%     { opacity:1; }
-  82%     { opacity:1; }
-  92%,100%{ opacity:.3; }
-}
-/* plug slides right 14px to insert into laptop port */
+/* plug slides right 18px to insert; cable body stays fixed creating subtle stretch gap */
 @keyframes p2PlugAnim {
-  0%,26%  { opacity:.3; transform:translateX(0); }
-  38%     { opacity:1;  transform:translateX(0); }
-  43%     { opacity:1;  transform:translateX(14px); }
-  82%     { opacity:1;  transform:translateX(14px); }
-  90%     { opacity:1;  transform:translateX(0); }
-  94%,100%{ opacity:.3; transform:translateX(0); }
+  0%,28%  { transform:translateX(0); }
+  42%     { transform:translateX(18px); }
+  82%     { transform:translateX(18px); }
+  92%,100%{ transform:translateX(0); }
 }
 
 /* ============================================
@@ -1058,20 +1048,22 @@ body {
                  Plug tip: x=281..285, y=148..156
                  In disconnected state plug right edge (x=285) is exactly at port. With translateX(+14px) → tip inserts 14px into port. -->
             <svg class="p2-cable-svg" viewBox="0 0 440 165" preserveAspectRatio="xMidYMid meet">
-              <!-- Cable body: from monitor chin → drop → curve right → horizontal to plug -->
-              <path class="p2-cable-body" d="M88,122 L88,148 C88,160 104,160 118,160 L268,160"/>
+              <!-- Cable body (fixed): exits right of monitor stand, drops, curves right, runs to x=248 -->
+              <path class="p2-cable-body" d="M128,157 L128,163 C128,165 148,164 165,162 L248,162"/>
               <!-- Port socket on laptop left side -->
-              <rect x="285" y="148" width="3" height="11" rx="1" fill="#2a2a3a" opacity="0.4"/>
-              <!-- Type-C plug (animates translateX to insert) -->
+              <rect x="285" y="152" width="3" height="14" rx="1" fill="#2a2a3a" opacity="0.45"/>
+              <!-- Type-C plug group: includes the horizontal cable tail so everything moves together.
+                   Default (disconnected): tip right edge at x=283, port at x=285 → 2px before port.
+                   Connected (translateX +18): tip at x=301, inserted 16px → cable tail creates stretch gap = 被拉感 -->
               <g class="p2-plug">
-                <!-- cable stub to plug -->
-                <line x1="268" y1="160" x2="272" y2="160" stroke="#444" stroke-width="4.5" stroke-linecap="butt"/>
+                <!-- cable tail that moves with the plug (creates stretch gap on connection) -->
+                <line x1="248" y1="162" x2="265" y2="162" stroke="#444" stroke-width="4.5" stroke-linecap="butt"/>
                 <!-- plug body -->
-                <rect x="271" y="153" width="14" height="14" rx="2" fill="#3a3a3a"/>
+                <rect x="264" y="152" width="17" height="18" rx="2" fill="#3a3a3a"/>
                 <!-- inner connector detail -->
-                <rect x="273" y="156" width="8" height="5" rx="1" fill="#555" opacity="0.6"/>
-                <!-- plug tip (narrower, inserts into port) -->
-                <rect x="283" y="154" width="4" height="12" rx="1" fill="#4a4a4a"/>
+                <rect x="266" y="156" width="10" height="7" rx="1" fill="#555" opacity="0.5"/>
+                <!-- plug tip / male connector (inserts into port) -->
+                <rect x="279" y="154" width="4" height="14" rx="1" fill="#4a4a4a"/>
               </g>
             </svg>
           </div>
