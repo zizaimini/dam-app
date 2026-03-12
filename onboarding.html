@@ -476,11 +476,12 @@ body {
    PAGE 2: MONITOR SCENE
    ============================================ */
 .p2-scene {
-  display:flex;align-items:flex-end;justify-content:center;
-  gap:0;width:100%;position:relative;
+  position:relative;
+  width:440px;height:165px;
+  margin:0 auto;
 }
-/* Monitor */
-.p2-mon { display:flex;flex-direction:column;align-items:center;flex-shrink:0; }
+/* Monitor — absolute left */
+.p2-mon { position:absolute;bottom:0;left:8px;display:flex;flex-direction:column;align-items:center; }
 .p2-mon-screen {
   width:154px;height:96px;
   border-radius:6px 6px 0 0;
@@ -497,16 +498,19 @@ body {
 }
 .p2-power-dot { width:4px;height:4px;border-radius:50%;background:#ff9500;opacity:.4; }
 
-/* Cable area */
-.p2-cable-area { display:flex;align-items:flex-end;padding-bottom:44px;flex-shrink:0; }
-.p2-cable-svg { overflow:visible; }
-.p2-cable-path {
-  fill:none;stroke:#666;stroke-width:3;stroke-linecap:round;
-  stroke-dasharray:150;stroke-dashoffset:150;opacity:.2;
+/* Cable SVG overlay */
+.p2-cable-svg {
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;overflow:visible;
 }
+.p2-cable-body {
+  fill:none;stroke:#444;stroke-width:4.5;stroke-linecap:round;
+  opacity:.3;
+}
+.p2-plug { opacity:.3; }
 
-/* Laptop */
-.p2-laptop { display:flex;flex-direction:column;align-items:center;flex-shrink:0; }
+/* Laptop — absolute right */
+.p2-laptop { position:absolute;bottom:0;right:8px;display:flex;flex-direction:column;align-items:center; }
 .p2-laptop-lid {
   width:138px;height:86px;
   border-radius:6px 6px 0 0;
@@ -558,32 +562,42 @@ body {
   animation:spin 1s linear infinite;
 }
 
-/* Animations (active via .p2-run class, added by JS on page entry) */
-#page-1.p2-run .p2-mon-off         { animation: p2MonOff  6s ease-in-out infinite; }
-#page-1.p2-run .p2-desktop         { animation: p2Desk    6s ease-in-out infinite; }
-#page-1.p2-run .p2-loading-overlay { animation: p2Load    6s ease-in-out infinite; }
-#page-1.p2-run .p2-cable-path      { animation: p2Cable   6s ease-in-out infinite; }
+/* Animations (active via .p2-run class) */
+#page-1.p2-run .p2-mon-off         { animation: p2MonOff   7s ease-in-out infinite; }
+#page-1.p2-run .p2-desktop         { animation: p2Desk     7s ease-in-out infinite; }
+#page-1.p2-run .p2-loading-overlay { animation: p2Load     7s ease-in-out infinite; }
+#page-1.p2-run .p2-cable-body      { animation: p2CableOp  7s ease-in-out infinite; }
+#page-1.p2-run .p2-plug            { animation: p2PlugAnim 7s ease-in-out infinite; }
 
 @keyframes p2MonOff {
-  0%,32%  { opacity:1; }
-  44%,82% { opacity:0; }
+  0%,30%  { opacity:1; }
+  42%,82% { opacity:0; }
   92%,100%{ opacity:1; }
 }
 @keyframes p2Desk {
-  0%,32%  { opacity:1; }
-  44%,82% { opacity:0; }
+  0%,30%  { opacity:1; }
+  42%,82% { opacity:0; }
   92%,100%{ opacity:1; }
 }
 @keyframes p2Load {
   0%,38%  { opacity:0; }
-  48%,77% { opacity:1; }
-  87%,100%{ opacity:0; }
+  48%,78% { opacity:1; }
+  88%,100%{ opacity:0; }
 }
-@keyframes p2Cable {
-  0%,24%  { stroke-dashoffset:150; opacity:.2; }
-  40%     { stroke-dashoffset:0;   opacity:1;  }
-  82%     { stroke-dashoffset:0;   opacity:1;  }
-  92%,100%{ stroke-dashoffset:150; opacity:.2; }
+@keyframes p2CableOp {
+  0%,26%  { opacity:.3; }
+  40%     { opacity:1; }
+  82%     { opacity:1; }
+  92%,100%{ opacity:.3; }
+}
+/* plug slides right 14px to insert into laptop port */
+@keyframes p2PlugAnim {
+  0%,26%  { opacity:.3; transform:translateX(0); }
+  38%     { opacity:1;  transform:translateX(0); }
+  43%     { opacity:1;  transform:translateX(14px); }
+  82%     { opacity:1;  transform:translateX(14px); }
+  90%     { opacity:1;  transform:translateX(0); }
+  94%,100%{ opacity:.3; transform:translateX(0); }
 }
 
 /* ============================================
@@ -989,13 +1003,6 @@ body {
               <div class="p2-mon-neck"></div>
               <div class="p2-mon-base"></div>
             </div>
-            <!-- Cable -->
-            <div class="p2-cable-area">
-              <svg class="p2-cable-svg" width="72" height="48" viewBox="0 0 72 48">
-                <!-- path from monitor side (left) to laptop side (right) -->
-                <path class="p2-cable-path" d="M4,8 C4,44 68,44 68,8"/>
-              </svg>
-            </div>
             <!-- Laptop (right) -->
             <div class="p2-laptop">
               <div class="p2-laptop-lid">
@@ -1033,6 +1040,40 @@ body {
               </div>
               <div class="p2-laptop-base"></div>
             </div>
+
+            <!-- Cable SVG overlay
+                 Scene coords (440×165):
+                 Monitor chin bottom ≈ (90, 107)  [left=8, screen outer 160px, center x=88+8=96? recalc: left=8, mon-screen width=154+6border=160, center=8+80=88]
+                 Wait: monitor left=8, mon-screen width=154 (content) + 3px border each side = outer 160px
+                 Monitor center x = 8 + 80 = 88
+                 Cable exits at (88, monitor_chin_bottom):
+                   from bottom: base(8)+neck(28)+chin(5) = 41px → chin bottom at y=165-41=124? No:
+                   monitor total from bottom: base(8)+neck(28)+chin(5)+screen_outer(102) = 143px
+                   chin bottom (=screen bottom) = 165-8-28-5 = 124... let's say y=122
+                 Laptop right=8, base outer width=150px → left edge at 440-8-150=282
+                 Laptop lid outer width=138+6=144px → lid left edge at 282+(150-144)/2=285
+                 Horizontal cable y=152 (near base area of laptop)
+                 Port at x=285, y=148..158
+                 Plug body: x=267..283, y=146..158, rx=2
+                 Plug tip: x=281..285, y=148..156
+                 In disconnected state plug right edge (x=285) is exactly at port. With translateX(+14px) → tip inserts 14px into port. -->
+            <svg class="p2-cable-svg" viewBox="0 0 440 165" preserveAspectRatio="xMidYMid meet">
+              <!-- Cable body: from monitor chin → drop → curve right → horizontal to plug -->
+              <path class="p2-cable-body" d="M88,122 L88,148 C88,160 104,160 118,160 L268,160"/>
+              <!-- Port socket on laptop left side -->
+              <rect x="285" y="148" width="3" height="11" rx="1" fill="#2a2a3a" opacity="0.4"/>
+              <!-- Type-C plug (animates translateX to insert) -->
+              <g class="p2-plug">
+                <!-- cable stub to plug -->
+                <line x1="268" y1="160" x2="272" y2="160" stroke="#444" stroke-width="4.5" stroke-linecap="butt"/>
+                <!-- plug body -->
+                <rect x="271" y="153" width="14" height="14" rx="2" fill="#3a3a3a"/>
+                <!-- inner connector detail -->
+                <rect x="273" y="156" width="8" height="5" rx="1" fill="#555" opacity="0.6"/>
+                <!-- plug tip (narrower, inserts into port) -->
+                <rect x="283" y="154" width="4" height="12" rx="1" fill="#4a4a4a"/>
+              </g>
+            </svg>
           </div>
           <p class="screen-caption">接入外部屏幕时，Dam 立刻在显示器和笔记本上显示加载页面</p>
         </div>
