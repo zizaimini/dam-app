@@ -504,7 +504,7 @@ body {
   pointer-events:none;overflow:visible;
 }
 .p2-cable-bezier {
-  fill:none;stroke:#3a3a3a;stroke-width:5;stroke-linecap:round;
+  fill:none;stroke:#3a3a3a;stroke-width:3;stroke-linecap:round;
 }
 
 /* Laptop — absolute right */
@@ -1051,17 +1051,17 @@ body {
             -->
             <svg class="p2-cable-svg" viewBox="0 0 440 200" preserveAspectRatio="xMidYMid meet">
               <!-- Bezier cable body (d updated by JS) -->
-              <path class="p2-cable-bezier" d="M128,159 C128,319 157,182 267,182"/>
+              <path class="p2-cable-bezier" d="M128,159 C128,239 137,182 247,182"/>
               <!-- Port socket -->
               <rect x="285" y="174" width="3" height="16" rx="1" fill="#2a2a3a" opacity="0.4"/>
               <!-- Type-C plug group (transform updated by JS) -->
               <g class="p2-plug" transform="translate(0,0)">
                 <!-- plug body -->
-                <rect x="266" y="172" width="18" height="20" rx="2.5" fill="#2e2e2e"/>
+                <rect x="268" y="174" width="13" height="15" rx="2" fill="#2e2e2e"/>
                 <!-- inner oval detail -->
-                <ellipse cx="275" cy="182" rx="6" ry="4" fill="#555" opacity="0.5"/>
+                <ellipse cx="274" cy="181" rx="4" ry="3" fill="#555" opacity="0.5"/>
                 <!-- male tip (the insert end, right side of plug) -->
-                <rect x="282" y="174" width="5" height="16" rx="1.5" fill="#444"/>
+                <rect x="280" y="175" width="4" height="13" rx="1.5" fill="#444"/>
               </g>
             </svg>
           </div>
@@ -1287,11 +1287,11 @@ function startP2Anim(pageEl) {
 
   // Fixed: cable start and tangent lengths
   const P0 = { x: 128, y: 159 };
-  const TV = 160;   // vertical tension at P0 (control point below)
+  const TV = 80;    // vertical tension at P0 (control point below)
   const TH = 110;   // horizontal tension at P3 (control point left of end)
 
   // Endpoints
-  const X_REST = 267, X_CONN = 285, Y = 182;
+  const X_REST = 247, X_CONN = 285, Y = 182;
 
   function setCable(px) {
     const c1x = P0.x, c1y = P0.y + TV;
