@@ -477,7 +477,7 @@ body {
    ============================================ */
 .p2-scene {
   position:relative;
-  width:440px;height:165px;
+  width:440px;height:200px;
   margin:0 auto;
 }
 /* Monitor — absolute left */
@@ -503,10 +503,9 @@ body {
   position:absolute;inset:0;width:100%;height:100%;
   pointer-events:none;overflow:visible;
 }
-.p2-cable-body {
-  fill:none;stroke:#444;stroke-width:4.5;stroke-linecap:round;
+.p2-cable-bezier {
+  fill:none;stroke:#3a3a3a;stroke-width:5;stroke-linecap:round;
 }
-.p2-plug { }
 
 /* Laptop — absolute right */
 .p2-laptop { position:absolute;bottom:0;right:8px;display:flex;flex-direction:column;align-items:center; }
@@ -561,11 +560,10 @@ body {
   animation:spin 1s linear infinite;
 }
 
-/* Animations (active via .p2-run class) */
-#page-1.p2-run .p2-mon-off         { animation: p2MonOff   7s ease-in-out infinite; }
-#page-1.p2-run .p2-desktop         { animation: p2Desk     7s ease-in-out infinite; }
-#page-1.p2-run .p2-loading-overlay { animation: p2Load     7s ease-in-out infinite; }
-#page-1.p2-run .p2-plug            { animation: p2PlugAnim 7s ease-in-out infinite; }
+/* Animations (active via .p2-run class; cable+plug driven by JS rAF) */
+#page-1.p2-run .p2-mon-off         { animation: p2MonOff 7s ease-in-out infinite; }
+#page-1.p2-run .p2-desktop         { animation: p2Desk   7s ease-in-out infinite; }
+#page-1.p2-run .p2-loading-overlay { animation: p2Load   7s ease-in-out infinite; }
 
 @keyframes p2MonOff {
   0%,30%  { opacity:1; }
@@ -582,13 +580,7 @@ body {
   48%,78% { opacity:1; }
   88%,100%{ opacity:0; }
 }
-/* plug slides right 18px to insert; cable body stays fixed creating subtle stretch gap */
-@keyframes p2PlugAnim {
-  0%,28%  { transform:translateX(0); }
-  42%     { transform:translateX(18px); }
-  82%     { transform:translateX(18px); }
-  92%,100%{ transform:translateX(0); }
-}
+/* cable bezier path + plug translateX driven by JS rAF (see startP2Anim) */
 
 /* ============================================
    PAGE 3: MEETING SHARE
@@ -1047,23 +1039,29 @@ body {
                  Plug body: x=267..283, y=146..158, rx=2
                  Plug tip: x=281..285, y=148..156
                  In disconnected state plug right edge (x=285) is exactly at port. With translateX(+14px) → tip inserts 14px into port. -->
-            <svg class="p2-cable-svg" viewBox="0 0 440 165" preserveAspectRatio="xMidYMid meet">
-              <!-- Cable body (fixed): exits right of monitor stand, drops, curves right, runs to x=248 -->
-              <path class="p2-cable-body" d="M128,157 L128,163 C128,165 148,164 165,162 L248,162"/>
-              <!-- Port socket on laptop left side -->
-              <rect x="285" y="152" width="3" height="14" rx="1" fill="#2a2a3a" opacity="0.45"/>
-              <!-- Type-C plug group: includes the horizontal cable tail so everything moves together.
-                   Default (disconnected): tip right edge at x=283, port at x=285 → 2px before port.
-                   Connected (translateX +18): tip at x=301, inserted 16px → cable tail creates stretch gap = 被拉感 -->
-              <g class="p2-plug">
-                <!-- cable tail that moves with the plug (creates stretch gap on connection) -->
-                <line x1="248" y1="162" x2="265" y2="162" stroke="#444" stroke-width="4.5" stroke-linecap="butt"/>
+            <!--
+              Cable: cubic Bézier with vertical tangent at start, horizontal tangent at end.
+              P0=(128,159) fixed — exits monitor stand downward.
+              P3 starts at (267,182) and slides to (285,182) when connecting.
+              C1=(128, P0.y+160) keeps exit vertical.
+              C2=(P3.x-110, P3.y) keeps entry horizontal.
+              JS rAF updates P3 and C2 each frame so curve deforms naturally.
+              Port socket at x=285 on laptop left side.
+              Plug body+tip drawn at P3rest, translated by JS as P3 moves.
+            -->
+            <svg class="p2-cable-svg" viewBox="0 0 440 200" preserveAspectRatio="xMidYMid meet">
+              <!-- Bezier cable body (d updated by JS) -->
+              <path class="p2-cable-bezier" d="M128,159 C128,319 157,182 267,182"/>
+              <!-- Port socket -->
+              <rect x="285" y="174" width="3" height="16" rx="1" fill="#2a2a3a" opacity="0.4"/>
+              <!-- Type-C plug group (transform updated by JS) -->
+              <g class="p2-plug" transform="translate(0,0)">
                 <!-- plug body -->
-                <rect x="264" y="152" width="17" height="18" rx="2" fill="#3a3a3a"/>
-                <!-- inner connector detail -->
-                <rect x="266" y="156" width="10" height="7" rx="1" fill="#555" opacity="0.5"/>
-                <!-- plug tip / male connector (inserts into port) -->
-                <rect x="279" y="154" width="4" height="14" rx="1" fill="#4a4a4a"/>
+                <rect x="266" y="172" width="18" height="20" rx="2.5" fill="#2e2e2e"/>
+                <!-- inner oval detail -->
+                <ellipse cx="275" cy="182" rx="6" ry="4" fill="#555" opacity="0.5"/>
+                <!-- male tip (the insert end, right side of plug) -->
+                <rect x="282" y="174" width="5" height="16" rx="1.5" fill="#444"/>
               </g>
             </svg>
           </div>
@@ -1268,7 +1266,67 @@ function drawArrows() {
 window.addEventListener('load', () => setTimeout(drawArrows, 100));
 window.addEventListener('resize', drawArrows);
 
-// Page 3 animation: cursor is JS-driven (so it lands exactly on the button)
+// ---- Page 2 animation: Bézier cable driven by rAF ----
+let p2AnimId = null;
+let p2Timers2 = [];
+
+function stopP2Anim(pageEl) {
+  pageEl.classList.remove('p2-run');
+  if (p2AnimId) { cancelAnimationFrame(p2AnimId); p2AnimId = null; }
+  p2Timers2.forEach(clearTimeout); p2Timers2 = [];
+}
+
+function startP2Anim(pageEl) {
+  stopP2Anim(pageEl);
+  void pageEl.offsetWidth;
+  pageEl.classList.add('p2-run');
+
+  const cable = pageEl.querySelector('.p2-cable-bezier');
+  const plug  = pageEl.querySelector('.p2-plug');
+  if (!cable || !plug) return;
+
+  // Fixed: cable start and tangent lengths
+  const P0 = { x: 128, y: 159 };
+  const TV = 160;   // vertical tension at P0 (control point below)
+  const TH = 110;   // horizontal tension at P3 (control point left of end)
+
+  // Endpoints
+  const X_REST = 267, X_CONN = 285, Y = 182;
+
+  function setCable(px) {
+    const c1x = P0.x, c1y = P0.y + TV;
+    const c2x = px - TH, c2y = Y;
+    cable.setAttribute('d', `M${P0.x},${P0.y} C${c1x},${c1y} ${c2x},${c2y} ${px},${Y}`);
+    plug.setAttribute('transform', `translate(${px - X_REST},0)`);
+  }
+
+  // Easing
+  function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  const CYCLE = 7000;
+  let startTs = null;
+
+  function frame(ts) {
+    if (!startTs) startTs = ts;
+    const t = ((ts - startTs) % CYCLE) / CYCLE; // 0..1
+
+    let px;
+    if      (t < 0.28)             px = X_REST;
+    else if (t < 0.42)             px = X_REST + (X_CONN - X_REST) * easeInOut((t - 0.28) / 0.14);
+    else if (t < 0.82)             px = X_CONN;
+    else if (t < 0.93)             px = X_CONN - (X_CONN - X_REST) * easeInOut((t - 0.82) / 0.11);
+    else                           px = X_REST;
+
+    setCable(px);
+    p2AnimId = requestAnimationFrame(frame);
+  }
+
+  // Init cable at rest
+  setCable(X_REST);
+  p2AnimId = requestAnimationFrame(frame);
+}
+
+// ---- Page 3 animation: cursor is JS-driven (so it lands exactly on the button) ----
 let p3Timers = [];
 function stopP3Anim(pageEl) {
   pageEl.classList.remove('p3-running');
@@ -1345,17 +1403,13 @@ function goTo(n) {
   prev.classList.add('exit');
   setTimeout(() => prev.classList.remove('exit'), 500);
   if (current === 2) stopP3Anim(prev);
-  if (current === 1) prev.classList.remove('p2-run');
+  if (current === 1) stopP2Anim(prev);
 
   current = n;
   const next = document.getElementById('page-' + current);
   next.classList.add('active');
   if (n === 0) setTimeout(drawArrows, 50);
-  if (n === 1) {
-    next.classList.remove('p2-run');
-    void next.offsetWidth;
-    setTimeout(() => next.classList.add('p2-run'), 60);
-  }
+  if (n === 1) setTimeout(() => startP2Anim(next), 60);
   if (n === 2) setTimeout(() => startP3Anim(next), 60);
 
   // update dots
