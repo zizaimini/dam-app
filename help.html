@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dam 帮助文档</title>
+<link rel="icon" type="image/png" href="icon.png" />
+<style>
+  :root {
+    --green: #1a9e5c;
+    --green-light: #e8f7ef;
+    --black: #111;
+    --gray: #555;
+    --gray-light: #f7f7f7;
+    --border: #e8e8e8;
+    --white: #fff;
+    --radius: 10px;
+    --sidebar-w: 240px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: var(--black);
+    background: var(--white);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--black); }
+  .nav-logo img { width: 26px; height: 26px; border-radius: 7px; }
+  .nav-logo span { font-size: 16px; font-weight: 700; }
+  .nav-subtitle { font-size: 13px; color: var(--gray); margin-left: 6px; font-weight: 400; }
+  nav a.back { font-size: 13px; color: var(--gray); text-decoration: none; }
+  nav a.back:hover { color: var(--green); }
+
+  /* LAYOUT */
+  .layout {
+    display: flex;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    gap: 48px;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* SIDEBAR */
+  aside {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    padding: 32px 0;
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .sidebar-section { margin-bottom: 24px; }
+  .sidebar-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+    text-transform: uppercase; color: #aaa;
+    margin-bottom: 8px; padding: 0 8px;
+  }
+  aside a {
+    display: block; padding: 6px 8px;
+    font-size: 13.5px; color: var(--gray);
+    text-decoration: none; border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  aside a:hover { background: var(--gray-light); color: var(--black); }
+  aside a.active { background: var(--green-light); color: var(--green); font-weight: 600; }
+
+  /* CONTENT */
+  main {
+    flex: 1;
+    padding: 40px 0 80px;
+    min-width: 0;
+  }
+
+  /* SECTIONS */
+  section { margin-bottom: 64px; scroll-margin-top: 72px; }
+
+  h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .lead { font-size: 16px; color: var(--gray); margin-bottom: 32px; }
+  h2 { font-size: 20px; font-weight: 700; margin: 40px 0 12px; letter-spacing: -0.3px; }
+  h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; }
+  p { margin-bottom: 12px; color: #333; font-size: 15px; }
+  ul, ol { padding-left: 20px; margin-bottom: 12px; }
+  li { font-size: 15px; color: #333; margin-bottom: 6px; }
+  li:last-child { margin-bottom: 0; }
+
+  /* CALLOUTS */
+  .callout {
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .callout.tip { background: var(--green-light); color: #0e6b3b; }
+  .callout.warning { background: #fff8e6; color: #7a5000; }
+  .callout.info { background: #e8f0ff; color: #1a3a8f; }
+
+  /* STEPS */
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    counter-increment: step;
+    content: counter(step);
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: var(--green); color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .step-desc { font-size: 14px; color: var(--gray); }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+  th {
+    background: var(--gray-light); text-align: left;
+    padding: 10px 14px; font-weight: 600; font-size: 13px;
+    border-bottom: 2px solid var(--border);
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: #333; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+
+  /* SHORTCUT BADGE */
+  kbd {
+    display: inline-block;
+    padding: 2px 8px; border-radius: 5px;
+    background: #f0f0f0; border: 1px solid #d0d0d0;
+    font-family: -apple-system, monospace;
+    font-size: 12px; font-weight: 600; color: #333;
+    box-shadow: 0 1px 0 #bbb;
+    white-space: nowrap;
+  }
+
+  /* FEATURE CARDS */
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+  .feature-card-icon { font-size: 22px; margin-bottom: 8px; }
+  .feature-card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .feature-card-desc { font-size: 13px; color: var(--gray); }
+
+  /* FAQ */
+  details {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  summary {
+    padding: 14px 18px;
+    font-size: 15px; font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+    display: flex; align-items: center; justify-content: space-between;
+    user-select: none;
+  }
+  summary::after { content: "+"; font-size: 18px; color: var(--gray); transition: transform 0.2s; }
+  details[open] summary::after { content: "−"; }
+  details[open] summary { border-bottom: 1px solid var(--border); }
+  .faq-body { padding: 16px 18px; font-size: 14px; color: #333; }
+  .faq-body p { margin-bottom: 8px; }
+  .faq-body p:last-child { margin-bottom: 0; }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 32px;
+    font-size: 13px; color: #aaa;
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--green); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="zh.html">
+    <img src="icon.png" alt="Dam">
+    <span>Dam <span class="nav-subtitle">帮助文档</span></span>
+  </a>
+  <a class="back" href="zh.html">← 返回官网</a>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">入门</div>
+      <a href="#what-is-dam">Dam 是什么</a>
+      <a href="#quick-start">快速上手</a>
+      <a href="#permissions">授权说明</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">核心功能</div>
+      <a href="#screen-policy">屏幕分类</a>
+      <a href="#app-protection">应用保护</a>
+      <a href="#hotkeys">全局快捷键</a>
+      <a href="#meeting-detection">会议共享检测</a>
+      <a href="#app-switcher">应用切换器</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">设置参考</div>
+      <a href="#settings-overview">设置界面总览</a>
+      <a href="#behavior-settings">行为设置</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">帮助</div>
+      <a href="#faq">常见问题</a>
+      <a href="#shortcuts-ref">快捷键一览</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- WHAT IS DAM -->
+    <section id="what-is-dam">
+      <h1>Dam 帮助文档</h1>
+      <p class="lead">Dam 是一款 macOS 菜单栏工具，专为需要在公共场合或会议中使用电脑的人设计。当你连接投影仪、接入会议共享，或按下快捷键时，Dam 自动关闭或最小化你指定的敏感应用，保护你的隐私。</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-card-icon">🖥️</div>
+          <div class="feature-card-title">屏幕智能识别</div>
+          <div class="feature-card-desc">连接已标记的"公共"屏幕时，自动触发保护。记住每块屏幕的策略，一次配置，永久生效。</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-icon">🔒</div>
+          <div class="feature-card-title">应用自动保护</div>
+          <div class="feature-card-desc">把需要保护的 App 加入列表，Dam 触发时一键关闭或最小化全部。</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-icon">⌨️</div>
+          <div class="feature-card-title">全局快捷键</div>
+          <div class="feature-card-desc">任何时候按下快捷键，立即执行保护动作，无需 Dam 在前台。</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-icon">📹</div>
+          <div class="feature-card-title">会议共享检测</div>
+          <div class="feature-card-desc">检测 Zoom、腾讯会议等的屏幕共享，及时提醒并触发保护。</div>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">✅</span>
+        <div>Dam 完全本地运行，无需账号，无网络依赖，所有数据只存在你的 Mac 上。</div>
+      </div>
+    </section>
+
+    <!-- QUICK START -->
+    <section id="quick-start">
+      <h2>快速上手</h2>
+      <p>完成以下四步，Dam 就可以正常工作了。</p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <div class="step-title">安装并启动 Dam</div>
+            <div class="step-desc">将 Dam 拖入「应用程序」文件夹，双击启动。Dam 会出现在菜单栏右上角，图标常驻后台。</div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">完成权限授权</div>
+            <div class="step-desc">首次启动后，Dam 会打开「设置 → 权限」页面。点击各权限旁的授权按钮，按系统提示完成授权。三项权限全部变为绿色即表示完成。详见 <a href="#permissions" style="color:var(--green)">授权说明</a>。</div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">添加需要保护的应用</div>
+            <div class="step-desc">进入「设置 → 应用列表」，点击「+」按钮，从当前正在运行的 App 中选择，或手动输入 Bundle ID。建议把常用的邮件、聊天、银行、笔记等 App 都加进来。</div>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <div class="step-title">接入外部屏幕 / 按下快捷键，体验保护</div>
+            <div class="step-desc">连接外接显示器时，Dam 会弹出全屏提示，选择「Public（公共）」即触发保护。也可以直接按 <kbd>⌃⌥⌘W</kbd> 立即关闭所有受保护 App。</div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- PERMISSIONS -->
+    <section id="permissions">
+      <h2>授权说明</h2>
+      <p>Dam 需要三项系统权限才能完整运行。设置界面会实时显示每项权限的状态。</p>
+
+      <table>
+        <tr>
+          <th>权限</th>
+          <th>用途</th>
+          <th>如果不授权</th>
+        </tr>
+        <tr>
+          <td><strong>本地网络</strong></td>
+          <td>扫描局域网中的 AirPlay 设备，在设置界面展示周围可用的投屏设备</td>
+          <td>AirPlay 设备列表不可用，其他功能正常</td>
+        </tr>
+        <tr>
+          <td><strong>自动化（Apple Events）</strong></td>
+          <td>向受保护的 App 发送「退出」指令，实现一键关闭功能</td>
+          <td>「关闭」模式失效；「最小化」模式不受影响</td>
+        </tr>
+        <tr>
+          <td><strong>辅助功能（Accessibility）</strong></td>
+          <td>操控 App 窗口，支持自定义应用切换器的窗口移动功能</td>
+          <td>自定义 App 切换器的跨屏幕移窗功能不可用</td>
+        </tr>
+      </table>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div>授权完成后，如果某项权限显示为红色，通常是因为 macOS 未刷新状态。尝试点击设置界面中的刷新按钮，或重启 Dam。</div>
+      </div>
+
+      <h3>如何手动检查权限</h3>
+      <p>打开 macOS「系统设置 → 隐私与安全性」，在「自动化」和「辅助功能」中找到 Dam，确认已勾选。</p>
+    </section>
+
+    <hr>
+
+    <!-- SCREEN POLICY -->
+    <section id="screen-policy">
+      <h2>屏幕分类（Screen Policy）</h2>
+      <p>Dam 的核心机制是对每块外部显示器贴上「安全」或「公共」的标签。</p>
+
+      <h3>首次接入新屏幕时</h3>
+      <p>连接一块 Dam 没见过的显示器时，Dam 会在所有外部屏幕上弹出全屏半透明提示浮层：</p>
+      <ul>
+        <li><strong>点击圆圈中央</strong>（Safe）→ 标记为安全屏幕，不执行任何动作</li>
+        <li><strong>点击圆圈外侧</strong>（Public）→ 标记为公共屏幕，立即触发应用保护</li>
+      </ul>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>Dam 通过屏幕的厂商、型号、序列号三个信息唯一识别每块显示器。你家里的显示器只需分类一次，以后接入时自动执行策略，不会再弹提示。</div>
+      </div>
+
+      <h3>同时接入多块新屏幕</h3>
+      <p>Dam 会逐一弹出提示，先处理完一块，再处理下一块。MacBook 的内建屏幕永远不触发提示。</p>
+
+      <h3>管理已记录的屏幕策略</h3>
+      <p>进入「设置 → 屏幕策略」可以：</p>
+      <ul>
+        <li>查看所有已记录的屏幕（显示厂商、型号）</li>
+        <li>将屏幕从 Safe 改为 Public，或反向修改</li>
+        <li>为每块屏幕添加备注（例如「公司会议室投影」）</li>
+        <li>删除记录（下次接入时重新弹出分类提示）</li>
+      </ul>
+    </section>
+
+    <!-- APP PROTECTION -->
+    <section id="app-protection">
+      <h2>应用保护（App Protection）</h2>
+      <p>触发公共屏幕策略后，Dam 会对「应用列表」中所有正在运行的 App 执行保护动作。</p>
+
+      <h3>两种保护模式</h3>
+      <table>
+        <tr>
+          <th>模式</th>
+          <th>行为</th>
+          <th>适用场景</th>
+        </tr>
+        <tr>
+          <td><strong>关闭（Quit）</strong></td>
+          <td>彻底退出应用，进程结束</td>
+          <td>隐私要求高，不希望应用继续在后台运行</td>
+        </tr>
+        <tr>
+          <td><strong>最小化（Minimize）</strong></td>
+          <td>将应用的所有窗口最小化到 Dock</td>
+          <td>需要保留会话，想会后快速恢复工作状态</td>
+        </tr>
+      </table>
+
+      <p>在「设置 → 行为设置」中选择默认模式。快捷键可以分别绑定到两种模式，随时切换。</p>
+
+      <h3>添加受保护应用</h3>
+      <ol>
+        <li>打开「设置 → 应用列表」</li>
+        <li>点击「+」</li>
+        <li>从当前运行的 App 列表中选择，或手动输入 Bundle ID（例如 <code>com.apple.mail</code>）</li>
+      </ol>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>建议把这些 App 加入保护列表：邮件、信息、微信、Slack、网银、笔记（Notion / Obsidian）、密码管理器（1Password）等。</div>
+      </div>
+
+      <h3>公共场景二次确认</h3>
+      <p>在「设置 → 行为设置」中可以开启「公共场景确认」开关。开启后，Dam 在执行保护动作前会再弹一次确认浮层，防止误触（例如不小心碰了外接显示器插口）。</p>
+
+      <h3>手动触发保护</h3>
+      <p>在「设置 → 应用列表」页面有手动触发按钮，无需连接外部屏幕即可立即执行关闭/最小化动作——方便测试或临时保护。</p>
+    </section>
+
+    <!-- HOTKEYS -->
+    <section id="hotkeys">
+      <h2>全局快捷键（Hotkeys）</h2>
+      <p>Dam 提供两个全局快捷键，在任意应用中均可触发，Dam 不需要在前台。</p>
+
+      <table>
+        <tr>
+          <th>快捷键</th>
+          <th>默认值</th>
+          <th>功能</th>
+        </tr>
+        <tr>
+          <td>关闭快捷键</td>
+          <td><kbd>⌃⌥⌘W</kbd></td>
+          <td>立即关闭（Quit）所有受保护应用</td>
+        </tr>
+        <tr>
+          <td>最小化快捷键</td>
+          <td><kbd>⌃⌥⌘Y</kbd></td>
+          <td>立即最小化所有受保护应用</td>
+        </tr>
+      </table>
+
+      <h3>修改快捷键</h3>
+      <ol>
+        <li>打开「设置 → 快捷键」</li>
+        <li>点击对应的快捷键输入框</li>
+        <li>按下你想要的组合键（支持 ⌘⌥⌃⇧ 任意组合 + 字母/数字/功能键）</li>
+        <li>自动保存，立即生效</li>
+      </ol>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div>避免与系统或其他 App 的常用快捷键冲突。如果快捷键不响应，请检查是否被其他应用占用。</div>
+      </div>
+    </section>
+
+    <!-- MEETING DETECTION -->
+    <section id="meeting-detection">
+      <h2>会议/录屏检测（Meeting Share Detection）</h2>
+      <p>除了检测物理外接屏幕，Dam 还能实时检测你的屏幕是否正在被会议软件共享或录制。</p>
+
+      <h3>Dam 可检测的四种状态</h3>
+      <table>
+        <tr>
+          <th>状态</th>
+          <th>含义</th>
+        </tr>
+        <tr>
+          <td>无共享</td>
+          <td>屏幕未被任何人看到，Dam 不做任何动作</td>
+        </tr>
+        <tr>
+          <td>AirPlay Only</td>
+          <td>仅有物理投屏（AirPlay / Sidecar），无软件共享</td>
+        </tr>
+        <tr>
+          <td>Meeting Only</td>
+          <td>仅有会议录屏（Zoom / Teams / Google Meet / 腾讯会议 等）</td>
+        </tr>
+        <tr>
+          <td>Both</td>
+          <td>AirPlay 和会议共享同时存在</td>
+        </tr>
+      </table>
+
+      <h3>触发方式</h3>
+      <p>检测到会议/录屏共享时，Dam 弹出浮层询问：「你现在是否在公共场景？」</p>
+      <ul>
+        <li>确认 → 触发应用保护</li>
+        <li>取消 → 忽略，不做任何动作</li>
+      </ul>
+
+      <div class="callout info">
+        <span class="callout-icon">ℹ️</span>
+        <div>Dam 使用 macOS 系统级 API 检测共享状态，不接入任何会议平台的账号，也不读取会议内容。</div>
+      </div>
+    </section>
+
+    <!-- APP SWITCHER -->
+    <section id="app-switcher">
+      <h2>自定义应用切换器（App Switcher）</h2>
+      <p>Dam 内置了一套替代 macOS 原生 ⌥Tab 的应用切换器，专为隐私场景优化。</p>
+
+      <h3>开启方式</h3>
+      <p>在「设置 → 行为设置」中打开「自定义 App 切换器」开关，重新绑定辅助功能权限即可。</p>
+
+      <h3>使用方法</h3>
+      <ul>
+        <li>按 <kbd>⌥Tab</kbd> 打开切换器（全屏透明浮层）</li>
+        <li><strong>左右滚动</strong>选择目标应用</li>
+        <li><strong>上滑</strong>确认并切换到该应用</li>
+      </ul>
+
+      <h3>与原生 ⌥Tab 的区别</h3>
+      <table>
+        <tr>
+          <th>功能</th>
+          <th>macOS 原生</th>
+          <th>Dam 自定义</th>
+        </tr>
+        <tr>
+          <td>排序方式</td>
+          <td>固定顺序</td>
+          <td>按最近使用时间排序</td>
+        </tr>
+        <tr>
+          <td>隐私应用</td>
+          <td>全部显示</td>
+          <td>自动过滤受保护应用，不出现在列表</td>
+        </tr>
+        <tr>
+          <td>跨屏幕移窗</td>
+          <td>不支持</td>
+          <td>上滑可将窗口从其他屏幕拉到当前屏幕并居中</td>
+        </tr>
+      </table>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div>受保护的 App 不出现在切换器中，意味着即使你在公共场合切换应用，也不会在界面上暴露这些 App 的存在。</div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- SETTINGS OVERVIEW -->
+    <section id="settings-overview">
+      <h2>设置界面总览</h2>
+      <p>点击菜单栏 Dam 图标 → 「设置」，打开设置窗口。侧边栏共有五个标签页：</p>
+
+      <table>
+        <tr>
+          <th>标签页</th>
+          <th>主要内容</th>
+        </tr>
+        <tr>
+          <td><strong>权限</strong></td>
+          <td>三项系统权限的状态显示 + 一键授权入口（默认打开此页）</td>
+        </tr>
+        <tr>
+          <td><strong>应用列表</strong></td>
+          <td>添加/删除受保护应用；手动触发保护动作</td>
+        </tr>
+        <tr>
+          <td><strong>屏幕策略</strong></td>
+          <td>查看已记录的屏幕；修改 Safe/Public 分类；添加备注；删除记录</td>
+        </tr>
+        <tr>
+          <td><strong>快捷键</strong></td>
+          <td>自定义关闭快捷键和最小化快捷键</td>
+        </tr>
+        <tr>
+          <td><strong>行为设置</strong></td>
+          <td>保护模式选择、公共场景确认开关、App 切换器开关</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- BEHAVIOR SETTINGS -->
+    <section id="behavior-settings">
+      <h2>行为设置详解</h2>
+
+      <h3>保护模式</h3>
+      <p>选择触发保护时的默认动作：</p>
+      <ul>
+        <li><strong>关闭（Quit）</strong>：彻底退出应用</li>
+        <li><strong>最小化（Minimize）</strong>：窗口缩入 Dock，保留会话</li>
+      </ul>
+      <p>注意：这里设置的是<em>默认模式</em>。两个快捷键可以分别绑定到「关闭」和「最小化」，随时按需选择。</p>
+
+      <h3>公共场景确认</h3>
+      <p>关闭（默认）：屏幕被标记为 Public 后立即执行保护，无需确认。</p>
+      <p>开启：执行保护动作前额外弹出确认提示，防止误触。</p>
+
+      <h3>自定义 App 切换器</h3>
+      <p>开启后，<kbd>⌥Tab</kbd> 被替换为 Dam 的自定义切换器。需要辅助功能权限。</p>
+    </section>
+
+    <hr>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <h2>常见问题</h2>
+
+      <details>
+        <summary>连接了外接显示器，但 Dam 没有弹出提示？</summary>
+        <div class="faq-body">
+          <p>这块屏幕之前已经被分类过了，Dam 记住了它的策略，不会重复提示。</p>
+          <p>如果想重新分类：进入「设置 → 屏幕策略」，找到该屏幕，点击删除，然后重新插拔显示器即可重新触发提示。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>快捷键按了没反应？</summary>
+        <div class="faq-body">
+          <p>可能的原因：</p>
+          <p>1. 辅助功能权限未授权。进入「设置 → 权限」检查状态。</p>
+          <p>2. 快捷键与其他 App 冲突。尝试修改为不常用的组合，或在其他 App 的快捷键设置中移除冲突项。</p>
+          <p>3. Dam 进程未启动。检查菜单栏是否有 Dam 图标。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>「关闭」模式会不会丢失我的工作？</summary>
+        <div class="faq-body">
+          <p>会。Dam 使用 Apple Events 发送退出指令，效果等同于你手动 ⌘Q 退出应用。</p>
+          <p>如果不希望丢失未保存的内容，建议：</p>
+          <p>1. 改用「最小化」模式；或</p>
+          <p>2. 开启「公共场景确认」，在确认前手动保存。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Dam 可以保护浏览器标签页吗？</summary>
+        <div class="faq-body">
+          <p>App 保护功能会最小化或关闭整个浏览器窗口，无法只针对特定标签。</p>
+          <p>如需精细的标签页保护，可以配合 Dam 的配套 Chrome 扩展「Privacy Tab Guard」使用——当 Dam 触发时，扩展自动隐藏你配置的隐私域名标签页，会后可一键恢复。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Dam 会上传我的数据吗？</summary>
+        <div class="faq-body">
+          <p>不会。Dam 完全本地运行，没有服务器，没有账号体系，不联网（AirPlay 设备扫描仅在局域网内进行）。你的屏幕策略、应用列表、快捷键配置全部存储在本机。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>如何卸载 Dam？</summary>
+        <div class="faq-body">
+          <p>1. 点击菜单栏 Dam 图标 → 退出 Dam</p>
+          <p>2. 将「应用程序」文件夹中的 Dam.app 拖入废纸篓</p>
+          <p>3. 如需清除数据，可在终端运行：<br><code>rm -rf ~/Library/Application\ Support/Dam</code></p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Dam 支持哪些 macOS 版本？</summary>
+        <div class="faq-body">
+          <p>Dam 要求 macOS 14.6 Sonoma 或更新版本。</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>我的 Mac 没有 Apple Silicon，Dam 支持 Intel 吗？</summary>
+        <div class="faq-body">
+          <p>请关注官网更新。当前版本的系统要求和支持架构以下载页面为准。</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- SHORTCUTS REF -->
+    <section id="shortcuts-ref">
+      <h2>快捷键一览</h2>
+
+      <table>
+        <tr>
+          <th>快捷键</th>
+          <th>默认值</th>
+          <th>功能</th>
+          <th>可自定义</th>
+        </tr>
+        <tr>
+          <td>关闭快捷键</td>
+          <td><kbd>⌃⌥⌘W</kbd></td>
+          <td>立即 Quit 所有受保护应用</td>
+          <td>✅</td>
+        </tr>
+        <tr>
+          <td>最小化快捷键</td>
+          <td><kbd>⌃⌥⌘Y</kbd></td>
+          <td>立即 Minimize 所有受保护应用</td>
+          <td>✅</td>
+        </tr>
+        <tr>
+          <td>应用切换器</td>
+          <td><kbd>⌥Tab</kbd></td>
+          <td>打开 Dam 自定义切换器（需开启）</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>切换器：选择</td>
+          <td>左右滚动</td>
+          <td>在切换器中选择应用</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>切换器：确认</td>
+          <td>上滑</td>
+          <td>激活所选应用（可将窗口移至当前屏幕）</td>
+          <td>—</td>
+        </tr>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Dam v1.0 · <a href="zh.html">官网</a> · <a href="legal/privacy.html">隐私政策</a> · <a href="legal/terms.html">使用条款</a></p>
+</footer>
+
+<script>
+  // Highlight active sidebar link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('aside a');
+
+  function updateActive() {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY + 100 >= s.offsetTop) current = s.id;
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+</script>
+
+</body>
+</html>
