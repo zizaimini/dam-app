@@ -445,6 +445,17 @@
   </style>
 </head>
 <body>
+<script>
+(function(){
+  var saved = localStorage.getItem('dam_lang');
+  if (!saved) {
+    var bl = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    if (!bl.startsWith('zh')) { localStorage.setItem('dam_lang','en'); location.replace('index.html'); }
+  } else if (saved === 'en') {
+    location.replace('index.html');
+  }
+})();
+</script>
 
 <!-- NAV -->
 <nav>
@@ -454,7 +465,7 @@
       <span>Dam</span>
     </a>
     <div class="nav-right">
-      <a class="lang-switch" href="index.html">English</a>
+      <a class="lang-switch" href="index.html" onclick="localStorage.setItem('dam_lang','en')">English</a>
       <a class="nav-cta" href="#download">免费下载</a>
     </div>
   </div>

@@ -338,6 +338,17 @@
   </style>
 </head>
 <body>
+<script>
+(function(){
+  var saved = localStorage.getItem('dam_lang');
+  if (!saved) {
+    var bl = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    if (bl.startsWith('zh')) { localStorage.setItem('dam_lang','zh'); location.replace('zh.html'); }
+  } else if (saved === 'zh') {
+    location.replace('zh.html');
+  }
+})();
+</script>
 
 <!-- NAV -->
 <nav>
@@ -347,7 +358,7 @@
       <span>Dam</span>
     </a>
     <div style="display:flex;align-items:center;gap:12px;">
-      <a href="zh.html" style="font-size:13px;color:#666;text-decoration:none;padding:5px 10px;border:1px solid #ddd;border-radius:6px;">中文</a>
+      <a href="zh.html" onclick="localStorage.setItem('dam_lang','zh')" style="font-size:13px;color:#666;text-decoration:none;padding:5px 10px;border:1px solid #ddd;border-radius:6px;">中文</a>
       <a class="nav-cta" href="#download">Download</a>
     </div>
   </div>
