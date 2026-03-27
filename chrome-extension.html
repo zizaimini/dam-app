@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Dam Chrome Extension — Developer Install</title>
+<style>
+  :root {
+    --bg: #0c0c0c;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --green: #34d399;
+    --text: #e8e8e8;
+    --muted: #888;
+    --white: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+
+  header { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  header a { color: var(--muted); text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+  header a:hover { color: var(--text); }
+  header .sep { color: var(--border); }
+  header span { color: var(--text); font-size: 14px; }
+
+  .hero { text-align: center; padding: 64px 24px 48px; max-width: 680px; margin: 0 auto; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(52,211,153,0.12); color: var(--green); font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 0.02em; }
+  h1 { font-size: clamp(26px, 5vw, 38px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 16px; }
+  .subtitle { color: var(--muted); font-size: 16px; line-height: 1.6; margin-bottom: 12px; }
+  .review-notice { display: inline-flex; align-items: center; gap: 8px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .review-notice .dot { width: 7px; height: 7px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; }
+
+  .download-card { max-width: 480px; margin: 40px auto 0; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; }
+  .download-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .download-card p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .btn-download { display: inline-flex; align-items: center; gap: 8px; background: var(--green); color: #0a0a0a; font-size: 15px; font-weight: 700; padding: 13px 28px; border-radius: 10px; text-decoration: none; transition: opacity 0.15s, transform 0.15s; }
+  .btn-download:hover { opacity: 0.88; transform: translateY(-1px); }
+  .file-meta { margin-top: 12px; font-size: 12px; color: var(--muted); }
+
+  .steps { max-width: 600px; margin: 56px auto 0; padding: 0 24px; }
+  .steps h2 { font-size: 20px; font-weight: 700; margin-bottom: 32px; text-align: center; }
+  .step { display: flex; gap: 20px; margin-bottom: 32px; }
+  .step-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3); color: var(--green); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .step-body h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .step-body p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+  .step-body code { background: #1e1e1e; border: 1px solid var(--border); padding: 2px 7px; border-radius: 5px; font-size: 13px; color: var(--green); font-family: 'SF Mono', 'Fira Code', monospace; }
+  .step-body .tip { margin-top: 8px; background: #161616; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--muted); }
+
+  .store-notice { max-width: 600px; margin: 48px auto 64px; padding: 24px 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; gap: 16px; align-items: flex-start; }
+  .store-notice .icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .store-notice h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .store-notice p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/">
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M13 17l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    dam.astrocean.love
+  </a>
+  <span class="sep">/</span>
+  <span>Chrome Extension</span>
+</header>
+
+<div class="hero">
+  <div class="badge">
+    <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/><path d="M10 6v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    Under Review
+  </div>
+  <h1>Dam Chrome Extension</h1>
+  <p class="subtitle">Protect your browser tabs during screen sharing — Dam detects sharing and hides sensitive tabs automatically.</p>
+  <div class="review-notice">
+    <span class="dot"></span>
+    Currently under Chrome Web Store review. Install manually while you wait.
+  </div>
+</div>
+
+<div class="download-card">
+  <h2>Download Extension</h2>
+  <p>Download the extension package, then follow the steps below to install it.</p>
+  <a class="btn-download" href="https://api.astrocean.love/download/dam-extension" onclick="trackDl()">
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2v11M6 9l4 4 4-4M3 17h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Download Extension (.zip)
+  </a>
+  <p class="file-meta">DamBrowserExtension.zip</p>
+</div>
+
+<div class="steps">
+  <h2>How to Install</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h3>Unzip the downloaded file</h3>
+      <p>Double-click <code>DamBrowserExtension.zip</code> to extract it. You'll get a folder — keep it somewhere permanent (don't delete it after installing).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h3>Open Chrome Extensions page</h3>
+      <p>In Chrome, go to <code>chrome://extensions</code> or open the menu → More Tools → Extensions.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h3>Enable Developer Mode</h3>
+      <p>Toggle on <strong>Developer mode</strong> in the top-right corner of the Extensions page.</p>
+      <div class="tip">This allows loading extensions that haven't been published to the Chrome Web Store yet.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h3>Load the extension</h3>
+      <p>Click <strong>Load unpacked</strong>, then select the extracted extension folder (the one containing <code>manifest.json</code>).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h3>Done — Dam is active in Chrome</h3>
+      <p>The Dam extension icon will appear in your toolbar. It works alongside the Dam macOS app to protect your browser tabs during screen sharing.</p>
+    </div>
+  </div>
+</div>
+
+<div class="store-notice">
+  <div class="icon">⏳</div>
+  <div>
+    <h3>Chrome Web Store review in progress</h3>
+    <p>The Dam extension has been submitted to the Chrome Web Store and is currently under review. Once approved, you'll be able to install it directly from the store with one click — no manual steps needed. We'll update this page when it's live.</p>
+  </div>
+</div>
+
+<script>
+function trackDl() {
+  // download tracking handled server-side via api.astrocean.love/download/dam-extension
+}
+</script>
+</body>
+</html>

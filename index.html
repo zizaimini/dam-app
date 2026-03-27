@@ -130,6 +130,21 @@
       gap: 8px;
     }
     .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      transition: border-color 0.15s, color 0.15s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .btn-secondary:hover { border-color: #555; color: var(--white); transform: translateY(-1px); }
     .hero-note {
       font-size: 13px;
       color: #aaa;
@@ -370,9 +385,13 @@
   <h1>Screen sharing,<br/>without the <em>exposure.</em></h1>
   <p>Dam watches for screen sharing. The moment it's detected, your sensitive apps disappear — automatically, silently, instantly.</p>
   <div class="hero-actions">
-    <a class="btn-primary" href="https://github.com/zizaimini/dam-app/releases/download/v1.0.0/Dam.dmg">
+    <a class="btn-primary" href="https://api.astrocean.love/download/dam">
       <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M10 2v11M6 9l4 4 4-4M3 17h14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Download for Mac
+    </a>
+    <a class="btn-secondary" href="/chrome-extension.html" target="_blank">
+      <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.8"/><circle cx="10" cy="10" r="3" fill="currentColor"/><path d="M10 3v4M10 13v4M3 10h4M13 10h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Get Chrome Extension
     </a>
   </div>
   <p class="hero-note">Free · macOS 13+ · Apple Silicon &amp; Intel</p>
@@ -522,7 +541,7 @@
     <span style="font-size:1em;color:#888;">one-time · lifetime license</span>
   </div>
   <br>
-  <a class="btn-primary" href="https://github.com/zizaimini/dam-app/releases/download/v1.0.0/Dam.dmg">
+  <a class="btn-primary" href="https://api.astrocean.love/download/dam">
     <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M10 2v11M6 9l4 4 4-4M3 17h14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     Try Free for 30 Days
   </a>
