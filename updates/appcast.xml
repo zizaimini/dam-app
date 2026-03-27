@@ -12,7 +12,7 @@
             <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
             <enclosure
-                url="https://dam.astrocean.love/updates/Dam.dmg"
+                url="https://api.astrocean.love/download/dam"
                 sparkle:edSignature="kxS6JNFMAiprZYqOIQvF6FUpmmpn7kw5NxmPNkbA0B3o8BIlkIF9nhQQ5fVnGfQ+t8N610r/QdgKfilNS+enDg=="
                 length="1983158"
                 type="application/octet-stream" />
