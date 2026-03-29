@@ -13,8 +13,8 @@
             <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
             <enclosure
                 url="https://api.astrocean.love/download/dam"
-                sparkle:edSignature="kxS6JNFMAiprZYqOIQvF6FUpmmpn7kw5NxmPNkbA0B3o8BIlkIF9nhQQ5fVnGfQ+t8N610r/QdgKfilNS+enDg=="
-                length="1983158"
+                sparkle:edSignature="EM3eyMHgLiVh1NTcL4bOS8FyTK331Zf3el8wCYPHmbzVzKw0PAf9igxp+L20cUsbyn7W5Hzcol/5/7zKU8xECA=="
+                length="3343176"
                 type="application/octet-stream" />
         </item>
     </channel>
