@@ -3,18 +3,18 @@
     <channel>
         <title>Dam</title>
         <item>
-            <title>1.1</title>
-            <pubDate>Sun, 29 Mar 2026 21:51:00 +0800</pubDate>
+            <title>1.2</title>
+            <pubDate>Sun, 29 Mar 2026 22:05:00 +0800</pubDate>
             <link>https://dam.astrocean.love/</link>
-            <sparkle:releaseNotesLink>https://dam.astrocean.love/updates/Dam-1.1.html</sparkle:releaseNotesLink>
+            <sparkle:releaseNotesLink>https://dam.astrocean.love/updates/Dam-1.2.html</sparkle:releaseNotesLink>
             <sparkle:fullReleaseNotesLink>https://dam.astrocean.love/updates/full-history.html</sparkle:fullReleaseNotesLink>
-            <sparkle:version>1</sparkle:version>
-            <sparkle:shortVersionString>1.1</sparkle:shortVersionString>
+            <sparkle:version>2</sparkle:version>
+            <sparkle:shortVersionString>1.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
             <enclosure
                 url="https://api.astrocean.love/download/dam"
-                sparkle:edSignature="i3YGyD0EvrpXVQ0qQ/Wa+4E65u/Db8RQuR3m+jFcwpyamIaKiK7BtH3gv2PFLU2aSUNXhZrN7e+SoPMs3cJMDA=="
-                length="3343206"
+                sparkle:edSignature="M7XxxIkl/ZEIv4qougxVN3jyig4R+JHJO2kMhzpjq2J8xRJHcrjvfEniGcz9f1x2MH765q3mxgKHpEHrs+EiBw=="
+                length="3343158"
                 type="application/octet-stream" />
         </item>
     </channel>
